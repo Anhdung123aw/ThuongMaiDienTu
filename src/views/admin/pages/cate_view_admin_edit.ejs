@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="theme-color" content="#2a7ee4" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Sửa danh mục sản phẩm TECHMO" />
+
+    <link rel="shortcut icon" href="/imgs/ico-logo-blue.png" />
+    <link rel="stylesheet" href="/styles/admin/pages/cate_view_admin.css" />
+
+    <title>TECHMO.Admin - Sửa danh mục</title>
+  </head>
+
+  <body>
+    <div class="grid-container">
+      <%- include('../partials/sidebar_admin') %> <%-
+      include('../partials/header_admin', title) %>
+
+      <main class="main-container">
+        <!-- FORM START -->
+        <form
+          action="/admin/categories_admin/edit/<%= category.category_id %>"
+          method="POST"
+          enctype="multipart/form-data"
+        >
+          <!-- HEADER -->
+          <div class="page-header">
+            <div class="row align-items-center">
+              <% var breadcrumb = [ { text: 'Danh mục sản phẩm', link:
+              '/admin/categories_admin' }, { text: 'Sửa', link: '#' } ]; %> <%-
+              include('../partials/breadcrumb.ejs', { breadcrumb: breadcrumb })
+              %>
+
+              <div class="page-header__title">
+                <h1>Sửa danh mục sản phẩm</h1>
+
+                <button type="submit" class="btn-admin btn-primary">
+                  <span class="material-symbols-outlined"> save </span>
+                  Lưu
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- CONTENT -->
+          <div class="row">
+            <div class="main-form">
+              <!-- NAME -->
+              <div class="card">
+                <div class="card-header">
+                  <h4>Thông tin danh mục</h4>
+                </div>
+
+                <div class="card-body">
+                  <label>Tên danh mục</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    name="category_name"
+                    value="<%= category.category_name %>"
+                    required
+                  />
+                </div>
+              </div>
+
+              <!-- TYPE -->
+              <div class="card">
+                <div class="card-header">
+                  <h4>Loại danh mục</h4>
+                </div>
+
+                <div class="card-body">
+                  <input
+                    type="text"
+                    class="form-control"
+                    name="categorry_type"
+                    value="<%= category.categorry_type %>"
+                  />
+                </div>
+              </div>
+
+              <!-- IMAGE -->
+              <div class="card">
+                <div class="card-header">
+                  <h4>Ảnh danh mục</h4>
+                </div>
+
+                <div class="card-body">
+                  <!-- ảnh cũ -->
+                  <img
+                    src="/imgs/categories/<%= category.category_img %>"
+                    style="width: 120px; margin-bottom: 10px"
+                  />
+
+                  <input type="file" name="category_img" accept="image/*" />
+                </div>
+              </div>
+
+              <!-- DISPLAY -->
+              <input
+                type="hidden"
+                name="category_is_display"
+                value="<%= category.category_is_display %>"
+              />
+            </div>
+          </div>
+        </form>
+        <!-- FORM END -->
+      </main>
+    </div>
+
+    <script src="/scripts/admin/cate_view_admin.js"></script>
+    <script src="/scripts/admin/index_admin.js"></script>
+  </body>
+</html>

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>TECHMO.Admin - Cài đặt</title>
+	<link rel="shortcut icon" href="/imgs/ico-logo-blue.png" />
+	<link rel="stylesheet" href="/styles/admin/pages/cate_admin.css">
+    <style>
+        .btn-save {
+          padding: 6px 14px;
+          background: #4caf50;
+          color: white;
+          border: none;
+          border-radius: 6px;
+          cursor: pointer;
+        }
+        
+        .btn-save:hover {
+          background: #43a047;
+        }
+        </style>
+</head>
+
+<body>
+<div class="grid-container">
+
+	<!-- Sidebar -->
+	<%- include('../partials/sidebar_admin') %>
+
+	<!-- Header -->
+	<%- include('../partials/header_admin', title) %>
+
+	<main class="main-container">
+
+		<!-- Header -->
+		<div class="main-header">
+			<div class="row">
+				<div>
+					<h3 class="main-header-title">
+						Home Sections 
+						<span class="main-header__badge"><%= data.totalRow %></span>
+					</h3>
+				</div>
+			</div>
+		</div>
+
+		<!-- Table -->
+		<div class="main__table-display">
+			<table class="main__table-responsive table">
+				<thead>
+					<tr class="table__heading">
+						<th>#ID</th>
+						<th>Danh Mục</th>
+						<th>Mức độ ưu tiên</th>
+						<th>Action</th>
+					</tr>
+				</thead>
+
+				<tbody>
+					<% if (!data.totalRow) { %>
+						<tr>
+							<td colspan="4" class="empty">Không có dữ liệu</td>
+						</tr>
+					<% } else { %>
+						<% data.sections.forEach(function(section) { %>
+							<tr>
+								<td><%= section.id %></td>
+								<td>
+									<span class="badge">
+										<%= section.section_key %>
+									</span>
+								</td>
+								<td>
+									<select 
+                                        class="order-select"
+                                        data-id="<%= section.id %>"
+                                        >
+                                        <% for(let i = 1; i <= data.totalRow; i++) { %>
+                                            <option value="<%= i %>" <%= i === section.display_order ? 'selected' : '' %>>
+                                            <%= i %>
+                                            </option>
+                                        <% } %>
+                                        </select>
+								</td>
+								<td>
+                                    <button class="btn-save" data-id="<%= section.id %>">
+                                      Lưu
+                                    </button>
+                                  </td>
+							</tr>
+						<% }) %>
+					<% } %>
+				</tbody>
+			</table>
+		</div>
+
+	</main>
+</div>
+
+<script>
+    document.querySelectorAll('.btn-save').forEach(btn => {
+      btn.addEventListener('click', async function (e) {
+        e.preventDefault();
+    
+        const id = this.dataset.id;
+        const select = document.querySelector(`.order-select[data-id="${id}"]`);
+        const newOrder = parseInt(select.value); // 🔥 FIX Ở ĐÂY
+    
+        const res = await fetch('/admin/update-order-section', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          credentials: 'include',
+          body: JSON.stringify({ id, newOrder })
+        });
+    
+        const data = await res.json();
+        console.log("RES:", data);
+    
+        if (data.success) {
+          location.reload();
+        } else {
+          alert("Lỗi: " + data.error);
+        }
+      });
+    });
+    </script>
+
+</body>
+</html>

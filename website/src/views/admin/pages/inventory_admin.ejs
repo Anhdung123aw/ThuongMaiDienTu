@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="theme-color" content="#2a7ee4" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="author" content="TECHMO Admin" />
+    <link rel="shortcut icon" href="/imgs/ico-logo-blue.png" />
+    <link rel="stylesheet" href="/styles/admin/pages/cate_admin.css" />
+
+    <title>TECHMO.Admin - Kho</title>
+  </head>
+
+  <body>
+    <div class="grid-container">
+      <!-- Sidebar -->
+      <%- include('../partials/sidebar_admin') %>
+
+      <!-- Header -->
+      <%- include('../partials/header_admin', { title: title }) %>
+
+      <!-- Main -->
+      <main class="main-container">
+        <!-- HEADER -->
+        <div class="main-header">
+          <div class="row">
+            <div>
+              <h3 class="main-header-title">
+                Kho hàng
+                <span class="main-header__badge"><%= data.totalRow || 0 %></span>
+              </h3>
+            </div>
+          </div>
+
+          <ul class="main__nav main-header__tabs nav">
+            <li class="nav__item active">
+              <a class="admin-a nav__link active" href="#">Tất cả</a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- FILTER -->
+        <div class="main__filter">
+          <div class="main__search search">
+            <form>
+              <button type="submit" class="search__button">
+                <span class="material-symbols-rounded"> search </span>
+              </button>
+
+              <input type="search" class="search__term" name="searchKey" placeholder="Tìm sản phẩm..." value="<%= data.searchKey || '' %>" />
+            </form>
+          </div>
+        </div>
+
+        <!-- TABLE -->
+        <div class="main__table-display">
+          <table class="main__table-responsive table">
+            <thead>
+              <tr class="table__heading">
+                <th><input type="checkbox" /></th>
+                <th>ID</th>
+                <th>Tên sản phẩm</th>
+                <th>Giá</th>
+                <th>Đơn vị tính</th>
+                <th>Bán chạy</th>
+                <th>Khuyến mãi</th>
+                <th>Số lượng</th>
+                <th>Trạng thái</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if (!data.inventory || data.inventory.length === 0) { %>
+              <tr>
+                <td colspan="10">Kho trống</td>
+              </tr>
+              <% } else { %> <% data.inventory.forEach(function(item){ %>
+              <tr>
+                <td><input type="checkbox" /></td>
+                <td><%= item.product_variant_id %></td>
+                <td class="product-info">
+                  <img src="/imgs/product_image/P<%= item.product_id %>/<%= item.product_avt_img || 'default.png' %>" alt="<%= item.product_name %>" onerror="this.src='/imgs/no-image.png'" />
+                  <span><%= item.product_name %></span>
+                </td>
+                <td><%= item.product_variant_price %></td>
+                <td>
+                  <span style="direction: ltr; unicode-bidi: isolate"><%= item.product_variant_name || '---' %></span>
+                </td>
+                <td><%= item.product_variant_is_bestseller %></td>
+                <td><%= item.discount_name || 'Không có' %></td>
+                <td><%= item.product_variant_available %></td>
+                <td><%= item.product_variant_available <= 5 ? 'Sắp hết' : 'Còn hàng' %></td>
+                <td>
+                  <ul class="action__dropdown dropdown">
+                    <li>
+                      <span class="dropdown-menu-toggle material-symbols-rounded"> more_vert </span>
+
+                      <ul class="dropdown__list">
+                        <li>
+                          <a class="admin-a" href="/admin/inventory_admin/edit/<%= item.product_variant_id %>"> Sửa </a>
+                        </li>
+                        <li>
+                          <a class="admin-a" href="/admin/inventory_admin/delete/<%= item.product_variant_id %>" onclick="return confirm('Bạn có chắc muốn xóa?')"> Xóa </a>
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                </td>
+              </tr>
+              <% }) %> <% } %>
+            </tbody>
+          </table>
+
+          <!-- PAGINATION -->
+          <%- include('../components/pagination', { pagination: data }) %>
+        </div>
+      </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/scripts/admin/cate_admin.js"></script>
+    <script src="/scripts/admin/index_admin.js"></script>
+  </body>
+</html>

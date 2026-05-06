@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="theme-color" content="#2a7ee4" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" href="/imgs/ico-logo-blue.png" />
+    <link rel="stylesheet" href="/styles/admin/pages/cate_admin.css" />
+
+    <title>TECHMO.Admin - Đơn hàng</title>
+  </head>
+
+  <body>
+    <div class="grid-container">
+      <!-- Sidebar -->
+      <%- include('../partials/sidebar_admin') %>
+
+      <!-- Header -->
+      <%- include('../partials/header_admin', title) %>
+
+      <main class="main-container">
+        <!-- Header -->
+        <div class="main-header">
+          <div class="row">
+            <div>
+              <h3 class="main-header-title">
+                Đơn hàng
+                <span class="main-header__badge"><%= data.totalRow %></span>
+              </h3>
+            </div>
+          </div>
+        </div>
+
+        <!-- Filter -->
+        <div class="main__filter">
+          <div class="main__search search">
+            <form>
+              <button type="submit" class="search__button">
+                <span class="material-symbols-rounded"> search </span>
+              </button>
+              <input type="search" class="search__term" name="searchKey" placeholder="Tìm đơn hàng..." />
+            </form>
+          </div>
+        </div>
+
+        <!-- Table -->
+        <div class="main__table-display">
+          <table class="main__table-responsive table">
+            <thead>
+              <tr class="table__heading">
+                <th><input type="checkbox" /></th>
+                <th>#ID</th>
+                <th>Tên khách</th>
+                <th>Ngày đặt</th>
+                <th>Địa chỉ</th>
+                <th>Tổng tiền</th>
+                <th>Trạng thái</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <% if (!data.totalRow) { %>
+              <tr>
+                <td colspan="8" class="empty">Không có đơn hàng</td>
+              </tr>
+              <% } else { %> <% data.orders.forEach(function(order){ %>
+              <tr>
+                <td><input type="checkbox" /></td>
+
+                <td><%= order.order_id %></td>
+
+                <td><%= order.order_name %></td>
+
+                <td><%= new Date(order.order_date).toLocaleDateString('vi-VN') %></td>
+
+                <td><%= order.order_delivery_address %></td>
+
+                <td><%= formatFunction.toCurrency(order.order_total_after) %></td>
+
+                <td
+                  class="<%= order.order_status === 'Chờ thanh toán' ? 'status warning' : '' %> <%= order.order_status === 'Đang giao hàng' ? 'status primary' : '' %> <%= order.order_status === 'Hoàn thành' ? 'status good' : '' %> <%= order.order_status === 'Đã hủy' ? 'status danger' : '' %>"
+                >
+                  <p><%= order.order_status %></p>
+                </td>
+
+                <!-- // -->
+                <td>
+                  <!-- Button Group -->
+                  <ul class="action__dropdown dropdown">
+                    <li>
+                      <span class="dropdown-menu-toggle material-symbols-rounded"> more_vert </span>
+
+                      <ul class="dropdown__list">
+                        <li>
+                          <a class="admin-a" href="/admin/orders_admin/view/<%= order.order_id %>">Xem</a>
+                        </li>
+
+                        <li>
+                          <a class="admin-a" href="/admin/orders_admin/edit/<%= order.order_id %>">Sửa</a>
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                  <!-- End Button Group -->
+                </td>
+              </tr>
+              <% }) %> <% } %>
+            </tbody>
+          </table>
+
+          <%- include('../components/pagination', {pagination : data}) %>
+        </div>
+      </main>
+    </div>
+
+    <script src="/scripts/admin/index_admin.js"></script>
+  </body>
+</html>

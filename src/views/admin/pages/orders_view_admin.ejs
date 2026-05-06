@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" href="/imgs/ico-logo-blue.png" />
+    <title>TECHMO.Admin - Chi tiết đơn hàng</title>
+
+    <link rel="stylesheet" href="/styles/admin/pages/cate_view_admin.css" />
+    <link rel="stylesheet" href="/styles/admin/pages/product_view_admin.css" />
+
+    <style>
+      .row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 30px;
+      }
+
+      .col-md-6 {
+        width: calc(50% - 15px);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="grid-container">
+      <%- include('../partials/sidebar_admin') %> <%- include('../partials/header_admin', { title: "CHI TIẾT ĐƠN HÀNG" }) %>
+
+      <main class="main-container">
+        <div class="content container-fluid">
+          <div class="page-header">
+            <h1>Đơn hàng #<%= order.order_id %></h1>
+          </div>
+
+          <div class="card">
+            <div class="card-body">
+              <div class="row">
+                <!-- LEFT: THÔNG TIN ĐƠN -->
+                <div class="col-md-6">
+                  <div>
+                    <label>Mã đơn</label>
+                    <input class="form-control" value="<%= order.order_id %>" disabled />
+                  </div>
+
+                  <div style="margin-top: 15px">
+                    <label>Tên khách</label>
+                    <input class="form-control" value="<%= order.order_name %>" disabled />
+                  </div>
+
+                  <div style="margin-top: 15px">
+                    <label>Số điện thoại</label>
+                    <input class="form-control" value="<%= order.order_phone %>" disabled />
+                  </div>
+
+                  <div style="margin-top: 15px">
+                    <label>Ngày đặt</label>
+                    <input class="form-control" value="<%= new Date(order.order_date).toLocaleDateString('vi-VN') %>" disabled />
+                  </div>
+
+                  <div style="margin-top: 15px">
+                    <label>Địa chỉ</label>
+                    <input class="form-control" value="<%= order.order_delivery_address %>" disabled />
+                  </div>
+
+                  <div style="margin-top: 15px">
+                    <label>Phương thức thanh toán</label>
+                    <input class="form-control" value="<%= order.paying_method_name %>" disabled />
+                  </div>
+
+                  <div style="margin-top: 15px">
+                    <label>Ghi chú</label>
+                    <textarea class="form-control" rows="3" disabled><%= order.order_note %></textarea>
+                  </div>
+
+                  <div style="margin-top: 15px">
+                    <label>Tổng tiền</label>
+                    <input class="form-control" value="<%= items.reduce((sum, item) => sum + (item.order_detail_price_after * item.order_detail_quantity), 0).toLocaleString('vi-VN') %>" disabled />
+                  </div>
+
+                  <div style="margin-top: 15px">
+                    <label>Trạng thái đơn hàng</label>
+                    <input class="form-control" value="<%= order.order_status %>" disabled />
+                  </div>
+                </div>
+
+                <!-- RIGHT: CHI TIẾT SẢN PHẨM -->
+                <div class="col-md-6">
+                  <label style="display: block; margin-bottom: 10px"> Chi tiết sản phẩm </label>
+
+                  <% items.forEach(function(item){ %>
+
+                  <div style="display: flex; gap: 10px; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px">
+                    <img
+                      src="/imgs/product_image/P<%= item.product_id %>/<%= item.product_avt_img || 'default.png' %>"
+                      style="width: 70px; height: 70px; object-fit: cover; border-radius: 8px"
+                      alt="<%= item.product_name %>"
+                      onerror="this.src='/imgs/no-image.png'"
+                    />
+
+                    <div>
+                      <b><%= item.product_name %></b>
+                      <div><%= item.product_variant_name %></div>
+                      <div>Số lượng: <%= item.order_detail_quantity %></div>
+                      <div>Giá: <%= item.order_detail_price_after %></div>
+                    </div>
+                  </div>
+
+                  <% }) %>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- BUTTON -->
+          <div style="margin-top: 20px; display: flex; gap: 10px">
+            <a href="/admin/orders_admin" style="background: #fff; color: #000; padding: 8px 16px; border-radius: 6px; text-decoration: none; border: 1px solid #ccc; display: inline-block">
+              Quay lại
+            </a>
+
+            <a href="/admin/orders_admin/edit/<%= order.order_id %>" style="background: #2a7ee4; color: #fff; padding: 8px 16px; border-radius: 6px; text-decoration: none; display: inline-block">
+              Sửa
+            </a>
+          </div>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>

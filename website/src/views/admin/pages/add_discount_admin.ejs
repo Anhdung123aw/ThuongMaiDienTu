@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" href="/imgs/ico-logo-blue.png" />
+    <title>TECHMO.Admin - Thêm khuyến mãi</title>
+
+    <link rel="stylesheet" href="/styles/admin/pages/cate_view_admin.css" />
+    <link rel="stylesheet" href="/styles/admin/pages/product_view_admin.css" />
+
+    <style>
+      .row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 30px;
+      }
+
+      .col-md-6 {
+        width: calc(50% - 15px);
+      }
+
+      label {
+        font-weight: 600;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="grid-container">
+      <%- include('../partials/sidebar_admin') %> <%- include('../partials/header_admin', { title: "THÊM KHUYẾN MÃI" }) %>
+
+      <main class="main-container">
+        <div class="content container-fluid">
+          <div class="page-header">
+            <h1>Thêm khuyến mãi</h1>
+          </div>
+
+          <!-- ❗ FIX: bỏ multipart/form-data -->
+          <form action="/admin/discounts_admin/add" method="POST">
+            <div class="card">
+              <div class="card-header">
+                <h4>Thông tin khuyến mãi</h4>
+              </div>
+
+              <div class="card-body">
+                <div class="row">
+                  <!-- LEFT -->
+                  <div class="col-md-6">
+                    <div>
+                      <label>Tên sự kiện</label>
+                      <input type="text" name="discount_name" class="form-control" required />
+                    </div>
+
+                    <div style="margin-top: 15px">
+                      <label>Mô tả</label>
+                      <textarea name="discount_description" class="form-control" rows="4"></textarea>
+                    </div>
+
+                    <div style="margin-top: 15px">
+                      <label>Ngày bắt đầu</label>
+                      <input type="date" name="discount_start_date" class="form-control" required />
+                    </div>
+
+                    <div style="margin-top: 15px">
+                      <label>Ngày kết thúc</label>
+                      <input type="date" name="discount_end_date" class="form-control" required />
+                    </div>
+
+                    <div style="margin-top: 15px">
+                      <label>Giảm giá (%)</label>
+                      <input type="number" step="0.1" min="0" max="100" name="discount_amount" class="form-control" required />
+                    </div>
+                  </div>
+
+                  <!-- RIGHT -->
+                  <div class="col-md-6">
+                    <div style="padding-top: 20px; color: #666">
+                      <p><b>Lưu ý:</b></p>
+                      <ul>
+                        <li>Giảm giá phải từ 0 - 100%</li>
+                        <li>Ngày bắt đầu phải nhỏ hơn ngày kết thúc</li>
+                        <li>Khuyến mãi mặc định là hiển thị</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- SAVE -->
+            <div style="margin-top: 20px">
+              <button type="submit" class="btn-admin btn-primary">Thêm khuyến mãi</button>
+            </div>
+          </form>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" href="/imgs/ico-logo-blue.png" />
+    <title>TECHMO.Admin - Sửa khách hàng</title>
+
+    <link rel="stylesheet" href="/styles/admin/pages/cate_view_admin.css" />
+    <link rel="stylesheet" href="/styles/admin/pages/product_view_admin.css" />
+
+    <style>
+      .row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 30px;
+      }
+
+      .col-md-6 {
+        width: calc(50% - 15px);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="grid-container">
+      <%- include('../partials/sidebar_admin') %>
+      <%- include('../partials/header_admin', { title: "SỬA KHÁCH HÀNG" }) %>
+
+      <main class="main-container">
+        <div class="content container-fluid">
+
+          <div class="page-header">
+            <h1>Sửa khách hàng</h1>
+          </div>
+
+          <form action="/admin/customers_admin/edit/<%= item.user_id %>" 
+            method="POST"
+            onsubmit="return validateForm()">
+
+            <div class="card">
+              <div class="card-header">
+                <h4>Thông tin khách hàng</h4>
+              </div>
+
+              <div class="card-body">
+                <div class="row">
+
+                  <!-- LEFT -->
+                  <div class="col-md-6">
+
+                    <div>
+                      <label>Họ tên</label>
+                      <input type="text" name="user_name" class="form-control"
+                        value="<%= item.user_name %>" required />
+                    </div>
+
+                    <div style="margin-top: 15px">
+                      <label>Ngày sinh</label>
+                      <input type="date" name="user_birth" class="form-control"
+                        value="<%= item.user_birth ? item.user_birth.toISOString().split('T')[0] : '' %>" />
+                    </div>
+
+                    <div style="margin-top: 15px">
+                      <label>Giới tính</label>
+                      <select name="user_sex" class="form-control">
+                        <option value="Nam" <%= item.user_sex == 'Nam' ? 'selected' : '' %>>Nam</option>
+                        <option value="Nữ" <%= item.user_sex == 'Nữ' ? 'selected' : '' %>>Nữ</option>
+                      </select>
+                    </div>
+
+                    <div style="margin-top: 15px">
+                      <label>Email</label>
+                      <input type="email" name="user_email" class="form-control"
+                        value="<%= item.user_email %>" />
+                    </div>
+
+                    <div style="margin-top: 15px">
+                      <label>Điện thoại</label>
+                      <input type="text" name="user_phone" class="form-control"
+                        value="<%= item.user_phone %>" />
+                    </div>
+
+                    <div style="margin-top: 15px">
+                      <label>Địa chỉ</label>
+                      <input type="text" name="user_address" class="form-control"
+                        value="<%= item.user_address %>" />
+                    </div>
+
+                    <!-- USER STATUS -->
+                    <div style="margin-top: 15px">
+                      <label>Trạng thái</label>
+                      <select name="user_status" class="form-control">
+                        <option value="1" <%= item.user_status == 1 ? 'selected' : '' %>>
+                          Hoạt động
+                        </option>
+                        <option value="0" <%= item.user_status == 0 ? 'selected' : '' %>>
+                          Bị khóa
+                        </option>
+                      </select>
+                    </div>
+
+                  </div>
+                  <div class="col-md-6 text-center">
+
+                    <label style="display:block; margin-bottom:10px">
+                      Ảnh đại diện
+                    </label>
+                  
+                    <img
+                      src="<%= item.user_avt_img 
+                        ? '/imgs/user_avt_img/' + item.user_avt_img 
+                        : '/imgs/user_avt_img/default.png' %>"
+                      alt="avatar"
+                      style="
+                        width: 200px;
+                        height: 200px;
+                        object-fit: cover;
+                        border-radius: 50%;
+                        border: 1px solid #ddd;
+                      "
+                      onerror="this.src='/imgs/user_avt_img/default.png'"
+                    />
+                  
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- SAVE -->
+            <div style="margin-top: 20px">
+              <button type="submit" class="btn-admin btn-primary">
+                Cập nhật
+              </button>
+            </div>
+
+          </form>
+        </div>
+      </main>
+    </div>
+  </body>
+  <script>
+    function validateForm() {
+      const name = document.querySelector("input[name='user_name']").value;
+      const email = document.querySelector("input[name='user_email']").value;
+      const phone = document.querySelector("input[name='user_phone']").value;
+    
+      const nameRegex = /^[A-Za-zÀ-ỹ\s]+$/;
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      const phoneRegex = /^[0-9]{10}$/;
+    
+      if (!nameRegex.test(name)) {
+        alert("Tên chỉ được chứa chữ cái");
+        return false;
+      }
+    
+      if (!emailRegex.test(email)) {
+        alert("Email sai định dạng");
+        return false;
+      }
+    
+      if (!phoneRegex.test(phone)) {
+        alert("Số điện thoại phải đủ 10 số");
+        return false;
+      }
+    
+      return true;
+    }
+    </script>
+</html>

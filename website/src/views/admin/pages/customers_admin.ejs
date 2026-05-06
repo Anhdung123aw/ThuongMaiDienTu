@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="theme-color" content="#2a7ee4" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="author" content="TECHMO Admin" />
+    <meta name="description" content="Quản lý khách hàng hệ thống TECHMO" />
+    <link rel="shortcut icon" type="image/x-icon" href="/imgs/ico-logo-blue.png" />
+    <link rel="stylesheet" href="/styles/admin/pages/cate_admin.css" />
+
+    <title>TECHMO.Admin - Khách hàng</title>
+  </head>
+
+  <body>
+    <div class="grid-container">
+      <!-- Sidebar -->
+      <%- include('../partials/sidebar_admin') %>
+
+      <!-- Header -->
+      <%- include('../partials/header_admin', title) %>
+
+      <!-- Main -->
+      <main class="main-container">
+        <!-- HEADER -->
+        <div class="main-header">
+          <div class="row">
+            <div>
+              <h3 class="main-header-title">
+                Khách hàng
+                <span class="main-header__badge"><%= data.totalRow %></span>
+              </h3>
+            </div>
+          </div>
+        </div>
+
+        <!-- FILTER -->
+        <div class="main__filter">
+          <!-- SEARCH -->
+          <div class="main__search search">
+            <form>
+              <button type="submit" class="search__button">
+                <span class="material-symbols-rounded"> search </span>
+              </button>
+
+              <input type="search" class="search__term" name="searchKey" placeholder="Tìm khách hàng..." value="<%= (data.searchKey) ? data.searchKey : '' %>" />
+            </form>
+          </div>
+        </div>
+
+        <!-- TABLE -->
+        <div class="main__table-display">
+          <table class="main__table-responsive table">
+            <thead>
+              <tr class="table__heading">
+                <th><input type="checkbox" class="checkbox" /></th>
+                <th>ID</th>
+                <th>Họ tên</th>
+                <th>Ngày sinh</th>
+                <th>Giới tính</th>
+                <th>Email</th>
+                <th>Điện thoại</th>
+                <th>Địa chỉ</th>
+                <th>Trạng thái</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <% if (!data.totalRow) { %>
+              <tr>
+                <td class="empty" colspan="10">Không có khách hàng</td>
+              </tr>
+              <% } else { %> <% data.customers.forEach(function(cus) { %>
+              <tr>
+                <td>
+                  <input type="checkbox" class="checkbox" />
+                </td>
+
+                <td><%= cus.user_id %></td>
+
+                <td><%= cus.user_name ?? '---' %></td>
+
+                <td><%= cus.user_birth ? new Date(cus.user_birth).toLocaleDateString('vi-VN') : '---' %></td>
+
+                <td><%= cus.user_sex ?? '---' %></td>
+
+                <td><%= cus.user_email ?? '---' %></td>
+
+                <td><%= cus.user_phone %></td>
+
+                <td><%= cus.user_address ?? '---' %></td>
+                <td>
+                  <% if (cus.user_status == 1) { %>
+                  <span style="color: green">Hoạt động</span>
+                  <% } else { %>
+                  <span style="color: red">Bị khóa</span>
+                  <% } %>
+                </td>
+                <!-- // -->
+                <td>
+                  <ul class="action__dropdown dropdown">
+                    <li>
+                      <span class="dropdown-menu-toggle material-symbols-rounded"> more_vert </span>
+
+                      <ul class="dropdown__list">
+                        <li>
+                          <a class="admin-a" href="/admin/customers_admin/edit/<%= cus.user_id %>"> Sửa </a>
+                        </li>
+                        <!-- <li>
+                          <a class="admin-a" href="/admin/customers_admin/delete/<%= cus.user_id %>" onclick="return confirm('Xóa khách hàng này?')"> Xóa </a>
+                        </li> -->
+                      </ul>
+                    </li>
+                  </ul>
+                </td>
+              </tr>
+              <% }) %> <% } %>
+            </tbody>
+          </table>
+
+          <!-- PAGINATION -->
+          <%- include('../components/pagination', { pagination: data }) %>
+        </div>
+      </main>
+    </div>
+
+    <script src="/scripts/admin/cate_admin.js"></script>
+    <script src="/scripts/admin/index_admin.js"></script>
+  </body>
+</html>

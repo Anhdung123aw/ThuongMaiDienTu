@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="theme-color" content="#2a7ee4" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="shortcut icon" href="/imgs/ico-logo-blue.png" />
+    <link rel="stylesheet" href="/styles/admin/pages/cate_view_admin.css" />
+    <link rel="stylesheet" href="/styles/admin/pages/product_view_admin.css" />
+
+    <title>TECHMO.Admin - Sửa sản phẩm</title>
+  </head>
+
+  <body>
+    <div class="grid-container">
+      <%- include('../partials/sidebar_admin') %>
+      <%- include('../partials/header_admin', { title: title }) %>
+
+      <main class="main-container">
+        <div class="content container-fluid">
+
+          <div class="page-header">
+            <h1>Sửa sản phẩm</h1>
+          </div>
+
+          <div class="row">
+            <form
+              action="/admin/products_admin/edit/<%= product.product_id %>"
+              method="POST"
+              enctype="multipart/form-data"
+              style="width: 100%"
+            >
+              <div class="main-form">
+
+                <!-- THÔNG TIN -->
+                <div class="card">
+                  <div class="card-header">
+                    <h4>Thông tin sản phẩm</h4>
+                  </div>
+
+                  <div class="card-body">
+
+                    <!-- NAME -->
+                    <div>
+                      <label>Tên sản phẩm</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        name="productName"
+                        value="<%= product.product_name %>"
+                        required
+                      />
+                    </div>
+
+                    <!-- CATEGORY -->
+                    <div style="margin-top: 15px">
+                      <label>Danh mục</label>
+
+                      <select class="form-control" name="category_id">
+                        <% categories.forEach(function(category) { %>
+                          <option 
+                            value="<%= category.category_id %>"
+                            <%= category.category_id == product.category_id ? "selected" : "" %>
+                          >
+                            <%= category.category_name %>
+                          </option>
+                        <% }) %>
+                      </select>
+                    </div>
+
+                    <!-- DESCRIPTION -->
+                    <div style="margin-top: 15px">
+                      <label>Mô tả sản phẩm</label>
+                      <textarea
+                        class="form-control"
+                        name="description"
+                        rows="5"
+                      ><%= product.product_description %></textarea>
+                    </div>
+
+                  </div>
+                </div>
+
+                <!-- IMAGE -->
+                <div class="card" style="margin-top: 20px">
+                  <div class="card-header">
+                    <h4>Ảnh sản phẩm</h4>
+                  </div>
+
+                  <div class="card-body">
+
+                    <!-- ẢNH HIỆN TẠI -->
+                    <img
+                      src="/imgs/product_image/P<%= product.product_id %>/<%= product.product_avt_img %>"
+                      width="120"
+                      style="margin-bottom:10px"
+                    />
+
+                    <input
+                      type="file"
+                      name="image"
+                      accept="image/*"
+                    />
+                  </div>
+                </div>
+
+                <!-- SAVE -->
+                <div style="margin-top: 20px">
+                  <button type="submit" class="btn-admin btn-primary">
+                    Lưu
+                  </button>
+                </div>
+
+              </div>
+            </form>
+          </div>
+
+        </div>
+      </main>
+    </div>
+
+    <script src="/scripts/admin/index_admin.js"></script>
+  </body>
+</html>

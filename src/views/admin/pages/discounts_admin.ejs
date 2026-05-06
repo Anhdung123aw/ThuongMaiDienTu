@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TECHMO.Admin - Khuyến mãi</title>
+    <link rel="shortcut icon" href="/imgs/ico-logo-blue.png" />
+    <link rel="stylesheet" href="/styles/admin/pages/cate_admin.css" />
+  </head>
+
+  <body>
+    <div class="grid-container">
+      <!-- Sidebar -->
+      <%- include('../partials/sidebar_admin') %>
+
+      <!-- Header -->
+      <%- include('../partials/header_admin', title) %>
+
+      <main class="main-container">
+        <!-- HEADER -->
+        <div class="main-header">
+          <div class="row">
+            <div>
+              <h3 class="main-header-title">
+                Khuyến mãi
+                <span class="main-header__badge"><%= data.totalRow %></span>
+              </h3>
+            </div>
+          </div>
+        </div>
+
+        <!-- FILTER -->
+        <div class="main__filter">
+          <div class="main__search search">
+            <form>
+              <button type="submit" class="search__button">
+                <span class="material-symbols-rounded">search</span>
+              </button>
+              <input type="search" class="search__term" name="searchKey" placeholder="Tìm khuyến mãi..." value="<%= data.searchKey || '' %>" />
+            </form>
+          </div>
+          <div>
+            <a class="admin-a btn-admin btn-primary" href="/admin/discounts_admin/add">
+              <span class="material-symbols-rounded">add</span>
+              <p>Thêm</p>
+            </a>
+          </div>
+        </div>
+
+        <!-- TABLE -->
+        <div class="main__table-display">
+          <table class="main__table-responsive table">
+            <thead>
+              <tr class="table__heading">
+                <th>#ID</th>
+                <th>Tên sự kiện</th>
+                <th>Mô tả</th>
+                <th>Ngày bắt đầu</th>
+                <th>Ngày kết thúc</th>
+                <th>Giảm giá</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <% if (!data.totalRow) { %>
+              <tr>
+                <td colspan="8" class="empty">Không có dữ liệu</td>
+              </tr>
+              <% } else { %> <% data.discounts.forEach(function(item) { %>
+              <tr>
+                <td><%= item.discount_id %></td>
+
+                <td>
+                  <strong><%= item.discount_name %></strong>
+                </td>
+
+                <td><%= item.discount_description || 'Không có' %></td>
+
+                <td><%= new Date(item.discount_start_date).toLocaleDateString('vi-VN') %></td>
+
+                <td><%= new Date(item.discount_end_date).toLocaleDateString('vi-VN') %></td>
+
+                <td><%= item.discount_amount %>%</td>
+
+                <td>
+                  <ul class="action__dropdown dropdown">
+                    <li>
+                      <span class="dropdown-menu-toggle material-symbols-rounded">more_vert</span>
+
+                      <ul class="dropdown__list">
+                        <li>
+                          <a class="admin-a" href="/admin/discounts_admin/edit/<%= item.discount_id %>">Sửa</a>
+                        </li>
+                        <li>
+                          <a class="admin-a" href="/admin/discounts_admin/delete/<%= item.discount_id %>" onclick="return confirm('Bạn có chắc muốn xóa khuyến mãi này?')"> Xóa </a>
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                </td>
+              </tr>
+              <% }) %> <% } %>
+            </tbody>
+          </table>
+
+          <!-- Pagination -->
+          <%- include('../components/pagination', {pagination : data}) %>
+        </div>
+      </main>
+    </div>
+
+    <script src="/scripts/admin/index_admin.js"></script>
+  </body>
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="theme-color" content="#2a7ee4">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="author" content="IE104.O12_Nhom2">
+	<meta name="description" content="TECHMO luôn hướng đến là người bạn đồng hành cùng mọi gia đình Việt Nam.">
+
+	<link rel="shortcut icon" type="image/x-icon" href="/imgs/ico-logo-blue.png">
+	<link rel="stylesheet" href="/styles/pages/site/about-us.css">
+
+	<title>TECHMO. Về chúng tôi</title>
+</head>
+
+<body>
+	<%- include('../../partials/header', { header: header, user: user }) %>
+	<%- include('../../partials/breadcrumb', { breadcrumbs : [{ text : 'Về chúng tôi', link : '/about-us' }] }) %>
+
+	<main class="about-container">
+		<div class="about-us__content">
+			<div class="about-us__title">
+				<p>Về chúng tôi</p>
+			</div>
+			<div class="about-us__slogan">
+				<h1>Chúng tôi là ai?</h1>
+				<h1>TECHMO!</h1>
+			</div>
+			<p class="about-us__intro">
+				<span class="highlight">TECHMO</span> là cửa hàng chuyên cung cấp các loại đồ ăn vặt ngon – độc – lạ, phù hợp với giới trẻ và dân văn phòng.
+			</p>
+		</div>
+		<img class="about-us__img" src="/imgs/about-us-3.png" alt="banner">
+		<div class="about-us__content--colunm">
+			<div class="about-us__content--left">
+				<h2>TẦM NHÌN</h2>
+			</div>
+			<div class="about-us__content--right">
+				<p>
+					Tại <span class="highlight">TECHMO</span>, chúng tôi hướng đến việc tạo ra 
+					một không gian mua sắm đồ ăn vặt trực tuyến tiện lợi, nhanh chóng và đầy 
+					thú vị. TECHMO mong muốn trở thành điểm đến quen thuộc cho những tín đồ 
+					ăn vặt, nơi bạn có thể dễ dàng tìm thấy những món ngon hấp dẫn mỗi ngày.
+				</p>
+				<p>
+					<span class="highlight">TECHMO</span> luôn đặt chất lượng lên hàng đầu, 
+					cam kết mang đến các sản phẩm tươi ngon, an toàn và hợp khẩu vị giới trẻ. 
+					Với sự am hiểu xu hướng và đam mê ẩm thực, chúng tôi không ngừng cập nhật 
+					những món ăn vặt “hot trend” để bạn luôn có trải nghiệm mới mẻ.
+				</p>
+				<p>
+					Không chỉ dừng lại ở việc cung cấp sản phẩm, <span class="highlight">TECHMO</span> 
+					còn chú trọng đến sự đa dạng và tiện lợi. Từ snack nội địa, đồ ăn vặt quốc tế 
+					đến các combo tiết kiệm, chúng tôi mang đến nhiều lựa chọn phù hợp với mọi 
+					sở thích và nhu cầu của bạn.
+				</p>
+			</div>
+		</div>
+		<img class="about-us__img" src="/imgs/about-us-2.png" alt="banner">
+		<div class="about-us__content--colunm">
+			<h2 class="about-us__content--disable">CAM KẾT</h2>
+			<div class="about-us__content--left">
+				<p>
+					<span class="highlight">TECHMO</span> cam kết mang đến cho khách hàng 
+					những món ăn vặt chất lượng, được tuyển chọn kỹ lưỡng và đảm bảo 
+					vệ sinh an toàn thực phẩm. Mỗi sản phẩm đều được chuẩn bị cẩn thận, 
+					giữ trọn hương vị thơm ngon khi đến tay khách hàng.
+				</p>
+				<p>
+					Không chỉ cung cấp đồ ăn ngon, <span class="highlight">TECHMO</span> 
+					còn luôn nỗ lực nâng cao trải nghiệm mua sắm thông qua dịch vụ giao 
+					hàng nhanh chóng, đóng gói chỉn chu và hỗ trợ khách hàng tận tình. 
+					Đội ngũ của chúng tôi luôn sẵn sàng giải đáp và xử lý mọi vấn đề 
+					một cách nhanh chóng, giúp bạn yên tâm khi lựa chọn TECHMO.
+				</p>
+			</div>
+		
+			<div class="about-us__content--right">
+				<h2>CAM KẾT</h2>
+			</div>
+		</div>
+		<img class="about-us__img" src="/imgs/about-us-1.png" alt="banner">
+	</main>
+
+	<%- include('../../components/scrollup') %>
+	<%- include('../../partials/footer') %>
+	<%- include('../../partials/app-bar') %>
+
+	<script src="/scripts/components/scrollup.js"></script>
+	<script src="/scripts/partials/header.js"></script>
+</body>
+

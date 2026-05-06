@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" href="/imgs/ico-logo-blue.png" />
+    <title>TECHMO.Admin - Sửa kho</title>
+
+    <link rel="stylesheet" href="/styles/admin/pages/cate_view_admin.css" />
+    <link rel="stylesheet" href="/styles/admin/pages/product_view_admin.css" />
+    <style>
+        .row {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 30px;
+        }
+      
+        .col-md-6 {
+          width: calc(50% - 15px);
+        }
+      </style>
+  </head>
+
+  <body>
+    <div class="grid-container">
+      <%- include('../partials/sidebar_admin') %>
+      <%- include('../partials/header_admin', { title: "SỬA KHO" }) %>
+
+      <main class="main-container">
+        <div class="content container-fluid">
+
+          <div class="page-header">
+            <h1>Sản phẩm trong kho</h1>
+          </div>
+
+          <form action="/admin/inventory_admin/update" method="POST">
+            <input type="hidden" name="product_variant_id" value="<%= item.product_variant_id %>">
+
+            <div class="card">
+              <div class="card-header">
+                <h4>Thông tin</h4>
+              </div>
+
+              <div class="card-body">
+                <div class="row">
+              
+                  <!-- LEFT -->
+                  <div class="col-md-6">
+                    
+                    <div>
+                      <label>Tên sản phẩm</label>
+                      <input type="text" class="form-control"
+                        value="<%= item.product_name %>" disabled />
+                    </div>
+              
+                    <div style="margin-top:15px">
+                      <label>Giá</label>
+                      <input type="number" min="0" class="form-control"
+                        name="price"
+                        value="<%= item.product_variant_price %>" required />
+                    </div>
+              
+                    <div style="margin-top:15px">
+                      <label>Đơn vị tính</label>
+                      <input type="text" class="form-control"
+                        name="variant_name"
+                        value="<%= item.product_variant_name %>" required />
+                    </div>
+              
+                    <div style="margin-top:15px">
+                      <label>Bán chạy</label>
+                      <select name="is_bestseller" class="form-control">
+                        <option value="1" <%= item.product_variant_is_bestseller == 1 ? 'selected' : '' %>>Có</option>
+                        <option value="0" <%= item.product_variant_is_bestseller == 0 ? 'selected' : '' %>>Không</option>
+                      </select>
+                    </div>
+              
+                    <div style="margin-top:15px">
+                      <label>Khuyến mãi</label>
+                      <select name="discount_id" class="form-control">
+                        <option value="">Không có</option>
+                        <% discounts.forEach(function(d){ %>
+                          <option value="<%= d.discount_id %>"
+                            <%= item.discount_id == d.discount_id ? 'selected' : '' %>>
+                            <%= d.discount_name %>
+                          </option>
+                        <% }) %>
+                      </select>
+                    </div>
+              
+                    <div style="margin-top:15px">
+                      <label>Số lượng</label>
+                      <input type="number" min="0" class="form-control"
+                        name="quantity"
+                        id="quantityInput"
+                        value="<%= item.product_variant_available %>"
+                        required />
+                    </div>
+              
+                    <div style="margin-top:15px">
+                      <label>Trạng thái</label>
+                      <input type="text" class="form-control"
+                        id="statusDisplay"
+                        readonly />
+                    </div>
+              
+                  </div>
+              
+                  <!-- RIGHT -->
+                  <div class="col-md-6 text-center">
+                    <label style="display:block; margin-bottom:10px">Ảnh</label>
+                    <img 
+                        src="/imgs/product_image/P<%= item.product_id %>/<%= item.product_avt_img || 'default.png' %>"
+                        alt="<%= item.product_name %>"
+                        style="
+                        width: 220px;
+                        height: 220px;
+                        object-fit: cover;
+                        border-radius: 10px;
+                        border: 1px solid #ddd;
+                        "
+                        onerror="this.src='/imgs/no-image.png'"
+                    />
+                  </div>
+              
+                </div>
+              </div>
+            </div>
+
+            <!-- SAVE -->
+            <div style="margin-top:20px">
+              <button type="submit" class="btn-admin btn-primary">
+                Lưu
+              </button>
+            </div>
+
+          </form>
+        </div>
+      </main>
+    </div>
+    
+    <script>
+      const quantityInput = document.getElementById("quantityInput");
+      const statusDisplay = document.getElementById("statusDisplay");
+
+      function updateStatus() {
+        let value = parseInt(quantityInput.value) || 0;
+
+        if (value === 0) {
+          statusDisplay.value = "Hết hàng";
+        } else if (value <= 5) {
+          statusDisplay.value = "Sắp hết";
+        } else {
+          statusDisplay.value = "Còn hàng";
+        }
+      }
+
+      quantityInput.addEventListener("input", updateStatus);
+      updateStatus();
+    </script>
+  </body>
+</html>
