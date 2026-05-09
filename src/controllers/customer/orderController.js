@@ -148,6 +148,10 @@ orderController.payment = async (req, res) => {
 
 	let purchase = await account.getPurchaseHistory(customer_id, 0, order_id)
 
+	if (!purchase || purchase.length === 0) {
+		return res.redirect('/order/cart')
+	}
+
 	if (paying_method_id == 1) {
 		res.render("./pages/order/momo", {
 			header: header,
@@ -169,6 +173,8 @@ orderController.payment = async (req, res) => {
 			formatFunction: formatFunction,
 			purchase: purchase[0],
 		})
+	} else {
+		res.redirect('/order/cart')
 	}
 }
 

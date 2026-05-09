@@ -28,41 +28,54 @@
               <input type="hidden" name="searchKey" value="<%= productListResults.searchKey %>" />
 
               <div class="filter-list">
+                <% 
+                  const currentMin = productListResults.minPrice;
+                  const currentMax = productListResults.maxPrice;
+                  const currentRange = currentMin !== undefined ? (currentMin + '-' + (currentMax || '999999999')) : '';
+                %>
                 <!-- Dưới 50k -->
                 <div class="dropdown-options">
-                  <input class="filter-option" type="radio" name="priceRange" value="0-50000" />
-                  <label class="filter-label">Dưới 50k</label>
+                  <input class="filter-option" type="radio" name="priceRange" id="price-0-50" value="0-50000" <%= currentRange === '0-50000' ? 'checked' : '' %> />
+                  <label class="filter-label <%= currentRange === '0-50000' ? 'active' : '' %>" for="price-0-50">Dưới 50k</label>
                 </div>
 
                 <!-- 50 - 100 -->
                 <div class="dropdown-options">
-                  <input class="filter-option" type="radio" name="priceRange" value="50000-100000" />
-                  <label class="filter-label">Từ 50k - 100k</label>
+                  <input class="filter-option" type="radio" name="priceRange" id="price-50-100" value="50000-100000" <%= currentRange === '50000-100000' ? 'checked' : '' %> />
+                  <label class="filter-label <%= currentRange === '50000-100000' ? 'active' : '' %>" for="price-50-100">Từ 50k - 100k</label>
                 </div>
 
                 <!-- 100 - 150 -->
                 <div class="dropdown-options">
-                  <input class="filter-option" type="radio" name="priceRange" value="100000-150000" />
-                  <label class="filter-label">Từ 100k - 150k</label>
+                  <input class="filter-option" type="radio" name="priceRange" id="price-100-150" value="100000-150000" <%= currentRange === '100000-150000' ? 'checked' : '' %> />
+                  <label class="filter-label <%= currentRange === '100000-150000' ? 'active' : '' %>" for="price-100-150">Từ 100k - 150k</label>
                 </div>
 
                 <!-- 150 - 200 -->
                 <div class="dropdown-options">
-                  <input class="filter-option" type="radio" name="priceRange" value="150000-200000" />
-                  <label class="filter-label">Từ 150k - 200k</label>
+                  <input class="filter-option" type="radio" name="priceRange" id="price-150-200" value="150000-200000" <%= currentRange === '150000-200000' ? 'checked' : '' %> />
+                  <label class="filter-label <%= currentRange === '150000-200000' ? 'active' : '' %>" for="price-150-200">Từ 150k - 200k</label>
                 </div>
 
                 <!-- >200 -->
                 <div class="dropdown-options">
-                  <input class="filter-option" type="radio" name="priceRange" value="200000-999999999" />
-                  <label class="filter-label">Trên 200k</label>
+                  <input class="filter-option" type="radio" name="priceRange" id="price-200-plus" value="200000-999999999" <%= currentRange === '200000-999999999' ? 'checked' : '' %> />
+                  <label class="filter-label <%= currentRange === '200000-999999999' ? 'active' : '' %>" for="price-200-plus">Trên 200k</label>
                 </div>
               </div>
 
               <div class="filter-dropdown__button">
                 <!-- ❗ reset đúng -->
                 <div class="filter-dropdown__button">
-                  <button type="button" class="btn btn--outlined pri" onclick="window.location.href='/search/results?searchKey=<%= productListResults.searchKey %>'">Hủy bộ lọc</button>
+                  <% 
+                    let cancelUrl = '/search/results';
+                    if (productListResults.category_id) {
+                      cancelUrl += '?category_id=' + productListResults.category_id;
+                    } else if (productListResults.searchKey) {
+                      cancelUrl += '?searchKey=' + productListResults.searchKey;
+                    }
+                  %>
+                  <button type="button" class="btn btn--outlined pri" onclick="window.location.href='<%= cancelUrl %>'">Hủy bộ lọc</button>
 
                   <button class="btn btn--filled pri" type="submit">Xem sản phẩm</button>
                 </div>
@@ -138,12 +151,14 @@
           e.preventDefault();
 
           const selected = document.querySelector('input[name="priceRange"]:checked');
-
-          const searchKeyInput = document.querySelector('input[name="searchKey"]');
-          const searchKey = searchKeyInput ? searchKeyInput.value : "";
-
-          const url = new URL("/search/results", window.location.origin);
-          url.searchParams.set("searchKey", searchKey);
+          
+          // Lấy URL hiện tại và các params hiện tại
+          const url = new URL(window.location.href);
+          
+          // Xóa các params cũ về giá để cập nhật mới
+          url.searchParams.delete("minPrice");
+          url.searchParams.delete("maxPrice");
+          url.searchParams.delete("page"); // Reset về trang 1 khi lọc
 
           if (selected) {
             const [min, max] = selected.value.split("-");

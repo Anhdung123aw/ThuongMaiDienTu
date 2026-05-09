@@ -13,8 +13,39 @@ authController.register = async (req, res) => {
   res.render("./pages/auth/register");
 };
 
+// [POST] auth/send-otp
+authController.sendOTP = async (req, res) => {
+  const { user_phone } = req.body;
+  if (!user_phone) {
+    return res.json({ status: "error", error: "Thiếu số điện thoại" });
+  }
+
+  // Tạo mã OTP 6 số ngẫu nhiên
+  const otp = Math.floor(100000 + Math.random() * 900000).toString();
+  req.session.otp = otp;
+  req.session.otpPhone = user_phone;
+
+  console.log(`[OTP] Mã xác thực cho ${user_phone} là: ${otp}`);
+
+  return res.json({
+    status: "success",
+    success: "Mã OTP đã được gửi (Kiểm tra console/thông báo)",
+    otp: otp, // Trả về luôn để dễ test cho dự án demo
+  });
+};
+
 // [POST] auth/register
 authController.submitRegister = async (req, res) => {
+  const { otp, user_phone } = req.body;
+
+  // Kiểm tra OTP
+  if (!otp || otp !== req.session.otp || user_phone !== req.session.otpPhone) {
+    return res.json({
+      status: "error",
+      error: "Mã OTP không chính xác hoặc đã hết hạn",
+    });
+  }
+
   auth.registerPost(req, function (error, dupPhoneNumber, success) {
     if (error) res.render("./pages/site/404-error");
     if (dupPhoneNumber)
@@ -23,11 +54,15 @@ authController.submitRegister = async (req, res) => {
         error: "Số điện thoại đã được sử dụng",
       });
 
-    if (success)
+    if (success) {
+      // Xóa OTP sau khi dùng xong
+      delete req.session.otp;
+      delete req.session.otpPhone;
       return res.json({
         status: "success",
         success: "Register successfully",
       });
+    }
   });
 };
 

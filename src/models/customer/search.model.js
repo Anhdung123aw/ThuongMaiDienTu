@@ -151,6 +151,10 @@ search.findProductsBySearchKey = async (req, limit = 24) => {
   return {
     products,
     searchKey,
+    category_id: null,
+    minPrice,
+    maxPrice,
+    sort,
     totalRow,
     totalPage,
     page,
@@ -302,6 +306,10 @@ search.findProductsByCateId = async (req, limit = 24) => {
   return {
     products,
     category_id,
+    searchKey: null,
+    minPrice,
+    maxPrice,
+    sort,
     totalRow,
     totalPage,
     page,

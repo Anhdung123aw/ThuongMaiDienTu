@@ -55,6 +55,8 @@ account.checkPassword = async (req, callback) => {
 }
 
 account.getPurchaseHistory = async (customer_id, order_status, order_id) => {
+    if (!customer_id) return []
+
     let getPurchaseHistorys = `SELECT * 
                                 FROM view_orders
                                 WHERE customer_id = ${customer_id}`

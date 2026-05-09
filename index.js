@@ -7,6 +7,7 @@ const app = express();
 const dotdenv = require("dotenv").config();
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
+const session = require("express-session");
 
 // connect to db
 const db = require("./src/config/db/connect");
@@ -27,6 +28,14 @@ app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser("secret"));
+app.use(
+  session({
+    secret: "techmo_secret_key",
+    resave: false,
+    saveUninitialized: true,
+    cookie: { maxAge: 300000 }, // 5 minutes
+  })
+);
 
 //app.use('/', require('./routes/index'))
 

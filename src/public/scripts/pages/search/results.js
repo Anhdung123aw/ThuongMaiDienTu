@@ -117,28 +117,20 @@ document.body.addEventListener('click', function (event) {
 const dropdownItems = document.querySelectorAll('.filter-label');
 dropdownItems.forEach((btn) => {
     btn.onclick = function () {
+        dropdownItems.forEach(item => item.classList.remove('active'));
         btn.classList.add('active');
     };
 });
 
-
-//sort-phone
-const sortBtns = document.querySelectorAll('.seacrh-result__sort--disable');
-let currentActiveBtn = sortBtns[0]; // Mặc định chọn phần tử đầu tiên
-
-currentActiveBtn.classList.add('active'); // Thêm class active mặc định
-
-sortBtns.forEach((btn) => {
-    btn.onclick = function () {
-        // Bỏ class 'active' khỏi phần tử hiện tại
-        currentActiveBtn.classList.remove('active');
-
-        // Thêm class 'active' vào phần tử được click
-        btn.classList.add('active');
-
-        // Gán phần tử hiện tại là phần tử mới được click
-        currentActiveBtn = btn;
-    };
+// Xử lý sắp xếp (Sort)
+const sortOptions = document.querySelectorAll('.sort-option');
+sortOptions.forEach(option => {
+    option.addEventListener('change', () => {
+        const url = new URL(window.location.href);
+        url.searchParams.set('sort', option.value);
+        url.searchParams.delete('page'); // Reset về trang 1 khi sắp xếp
+        window.location.href = url.toString();
+    });
 });
 
 //popup

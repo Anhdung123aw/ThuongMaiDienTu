@@ -9,6 +9,7 @@ const middleware = require('../middleware/authMiddleware')
 
 router.post('/findUser', authController.findUser)
 router.get('/register', middleware.checkAuth, authController.register)
+router.post('/send-otp', authController.sendOTP)
 router.post('/register', middleware.checkAuth, authController.submitRegister)
 router.get('/login', middleware.checkAuth, authController.login)
 router.post('/login', middleware.checkAuth, authController.submitLogin)
