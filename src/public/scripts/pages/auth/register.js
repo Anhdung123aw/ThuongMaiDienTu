@@ -75,44 +75,20 @@ const phoneNumber = document.getElementById("phoneNumber");
 const password = document.getElementById("password");
 const passwordRepeat = document.getElementById("passwordRepeat");
 
-const btnSendOTP = document.getElementById("btnSendOTP");
-const otpWrap = document.getElementById("otp-wrap");
+const captchaImg = document.getElementById("captcha-img");
+const refreshCaptcha = document.getElementById("refresh-captcha");
 
-btnSendOTP.addEventListener("click", async () => {
-  const phoneValue = phoneNumber.value.trim();
-  if (!isValidPhoneNumber(phoneValue)) {
-    setError(phoneNumber, "Vui lòng nhập số điện thoại hợp lệ trước!");
-    return;
-  }
+const reloadCaptcha = () => {
+  captchaImg.src = `/auth/captcha?t=${Date.now()}`;
+};
 
-  btnSendOTP.disabled = true;
-  btnSendOTP.innerText = "Đang gửi...";
+if (captchaImg) {
+  captchaImg.addEventListener("click", reloadCaptcha);
+}
+if (refreshCaptcha) {
+  refreshCaptcha.addEventListener("click", reloadCaptcha);
+}
 
-  try {
-    const res = await fetch("/auth/send-otp", {
-      method: "POST",
-      body: JSON.stringify({ user_phone: phoneValue }),
-      headers: { "Content-Type": "application/json" },
-    });
-    const data = await res.json();
-
-    if (data.status === "success") {
-      otpWrap.style.display = "block";
-      setSuccess(phoneNumber);
-      alert(`Mã OTP của bạn là: ${data.otp} (Mô phỏng gửi tin nhắn)`);
-      btnSendOTP.innerText = "Gửi lại";
-    } else {
-      setError(phoneNumber, data.error);
-      btnSendOTP.innerText = "Gửi mã";
-    }
-  } catch (error) {
-    console.error(error);
-    setError(phoneNumber, "Lỗi kết nối server!");
-    btnSendOTP.innerText = "Gửi mã";
-  } finally {
-    btnSendOTP.disabled = false;
-  }
-});
 
 form.addEventListener("submit", (e) => {
   //Ngăn chặn việc gửi form nếu có bất kỳ trường nào không hợp lệ
@@ -199,24 +175,16 @@ const validateInput = async () => {
     setSuccess(passwordRepeat);
   }
 
-  const otp = document.getElementById("otp");
-  const otpValue = otp.value.trim();
-  const otpWrap = document.getElementById("otp-wrap");
+  const captcha = document.getElementById("captcha");
+  const captchaValue = captcha.value.trim();
 
-  if (otpWrap.style.display !== "none") {
-    if (otpValue === "") {
-      setError(otp, "Vui lòng nhập mã OTP!");
-      isAllValid = false;
-    } else if (otpValue.length !== 6) {
-      setError(otp, "Mã OTP phải có 6 chữ số!");
-      isAllValid = false;
-    } else {
-      setSuccess(otp);
-    }
-  } else {
-    setError(phoneNumber, "Vui lòng xác thực số điện thoại!");
+  if (captchaValue === "") {
+    setError(captcha, "Vui lòng nhập mã xác nhận!");
     isAllValid = false;
+  } else {
+    setSuccess(captcha);
   }
+
 
   // Nếu tất cả các trường thông tin hợp lệ, thì gửi form
   if (isAllValid) {
@@ -224,8 +192,9 @@ const validateInput = async () => {
       user_login_name: userName.value.trim(),
       user_phone: phoneNumber.value.trim(),
       user_password: password.value.trim(),
-      otp: otpValue,
+      captcha: captchaValue,
     };
+
 
     await fetch("/auth/register", {
       method: "POST",
@@ -237,8 +206,10 @@ const validateInput = async () => {
       .then((res) => res.json())
       .then(async (back) => {
         if (back.status == "error") {
-          setError(phoneNumber, back.error);
+          setError(captcha, back.error);
+          reloadCaptcha();
         } else {
+
           const login = {
             phoneNumber: phoneNumber.value.trim(),
             password: password.value.trim(),

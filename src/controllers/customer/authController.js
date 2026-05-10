@@ -1,4 +1,6 @@
 const { json } = require("express");
+const svgCaptcha = require("svg-captcha");
+
 const db = require("../../config/db/connect");
 const auth = require("../../models/customer/auth.model");
 const jwt = require("jsonwebtoken");
@@ -11,6 +13,19 @@ const authController = () => {};
 // [GET] auth/register
 authController.register = async (req, res) => {
   res.render("./pages/auth/register");
+};
+
+// [GET] auth/captcha
+authController.getCaptcha = async (req, res) => {
+  const captcha = svgCaptcha.create({
+    size: 6,
+    noise: 2,
+    color: true,
+    background: "#f0f0f0",
+  });
+  req.session.captcha = captcha.text.toLowerCase();
+  res.type("svg");
+  res.status(200).send(captcha.data);
 };
 
 // [POST] auth/send-otp
@@ -34,17 +49,20 @@ authController.sendOTP = async (req, res) => {
   });
 };
 
+
+
 // [POST] auth/register
 authController.submitRegister = async (req, res) => {
-  const { otp, user_phone } = req.body;
+  const { captcha, user_phone } = req.body;
 
-  // Kiểm tra OTP
-  if (!otp || otp !== req.session.otp || user_phone !== req.session.otpPhone) {
+  // Kiểm tra Captcha
+  if (!captcha || captcha.toLowerCase() !== req.session.captcha) {
     return res.json({
       status: "error",
-      error: "Mã OTP không chính xác hoặc đã hết hạn",
+      error: "Mã xác nhận không chính xác",
     });
   }
+
 
   auth.registerPost(req, function (error, dupPhoneNumber, success) {
     if (error) res.render("./pages/site/404-error");
@@ -55,9 +73,9 @@ authController.submitRegister = async (req, res) => {
       });
 
     if (success) {
-      // Xóa OTP sau khi dùng xong
-      delete req.session.otp;
-      delete req.session.otpPhone;
+      // Xóa captcha sau khi dùng xong
+      delete req.session.captcha;
+
       return res.json({
         status: "success",
         success: "Register successfully",

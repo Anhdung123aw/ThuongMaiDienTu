@@ -9,8 +9,11 @@ const middleware = require('../middleware/authMiddleware')
 
 router.post('/findUser', authController.findUser)
 router.get('/register', middleware.checkAuth, authController.register)
+router.get('/captcha', authController.getCaptcha)
 router.post('/send-otp', authController.sendOTP)
 router.post('/register', middleware.checkAuth, authController.submitRegister)
+
+
 router.get('/login', middleware.checkAuth, authController.login)
 router.post('/login', middleware.checkAuth, authController.submitLogin)
 router.get('/logout', middleware.checkUnAuth, authController.logout)

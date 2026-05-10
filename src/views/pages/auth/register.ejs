@@ -41,19 +41,24 @@
 								<div class="register__error"></div>
 							</div>
 
-							<div class="register__input-wrap" style="display: flex; gap: 10px; align-items: flex-end; height: auto; margin-bottom: 2rem;">
-								<div style="flex: 1; position: relative; height: 37px;">
-									<input type="text" id="phoneNumber" name="phoneNumber" class="register__input-field" autocomplete="off">
-									<label>Số điện thoại<span class="red-start">*</span></label>
-									<div class="register__error"></div>
-								</div>
-								<button type="button" id="btnSendOTP" class="register__otp-btn" style="height: 37px; padding: 0 15px; border-radius: 8px; background: var(--primary-color-1); color: white; cursor: pointer; font-size: 14px; border: none; z-index: 10; position: relative;">Gửi mã</button>
+							<div class="register__input-wrap">
+								<input type="text" id="phoneNumber" name="phoneNumber" class="register__input-field" autocomplete="off">
+								<label>Số điện thoại<span class="red-start">*</span></label>
+								<div class="register__error"></div>
 							</div>
 
-							<div class="register__input-wrap" id="otp-wrap" style="display: none; height: 37px; position: relative; margin-bottom: 2rem;">
-								<input type="text" id="otp" name="otp" class="register__input-field" autocomplete="off">
-								<label>Mã xác thực OTP<span class="red-start">*</span></label>
-								<div class="register__error"></div>
+							<div class="register__input-wrap" style="display: flex; gap: 10px; align-items: flex-end; height: auto; margin-bottom: 2rem;">
+								<div style="flex: 1; position: relative; height: 37px;">
+									<input type="text" id="captcha" name="captcha" class="register__input-field" autocomplete="off">
+									<label>Mã xác nhận<span class="red-start">*</span></label>
+									<div class="register__error"></div>
+								</div>
+								<div class="captcha-container" style="height: 37px; display: flex; align-items: center; gap: 5px;">
+									<img src="/auth/captcha" id="captcha-img" alt="Captcha" style="height: 100%; border-radius: 4px; cursor: pointer;" title="Click để đổi mã">
+									<button type="button" id="refresh-captcha" style="background: none; border: none; cursor: pointer; color: var(--primary-color-1); display: flex; align-items: center;">
+										<span class="material-symbols-outlined" style="font-size: 20px;">refresh</span>
+									</button>
+								</div>
 							</div>
 
 							<div class="register__input-wrap">
