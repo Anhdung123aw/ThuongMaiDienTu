@@ -50,6 +50,19 @@
 								</span>
 								<div class="login__error"></div>
 							</div>
+							<div class="login__input-wrap" style="display: flex; gap: 10px; align-items: flex-end; height: auto; margin-bottom: 2rem;">
+								<div style="flex: 1; position: relative; height: 37px;">
+									<input type="text" id="captcha" name="captcha" class="login__input-field" autocomplete="off">
+									<label>Mã xác nhận<span class="red-start">*</span></label>
+									<div class="login__error"></div>
+								</div>
+								<div class="captcha-container" style="height: 37px; display: flex; align-items: center; gap: 5px;">
+									<img src="/auth/captcha" id="captcha-img" alt="Captcha" style="height: 100%; border-radius: 4px; cursor: pointer;" title="Click để đổi mã">
+									<button type="button" id="refresh-captcha" style="background: none; border: none; cursor: pointer; color: var(--primary-color-1); display: flex; align-items: center;">
+										<span class="material-symbols-outlined" style="font-size: 20px;">refresh</span>
+									</button>
+								</div>
+							</div>
 
 							<input type="submit" value="Đăng nhập" class="login__sign-btn">
 							<p class="login__text">

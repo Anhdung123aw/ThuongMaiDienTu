@@ -50,16 +50,17 @@
 				<div class="order-detail__location location">
 					<h2>Địa chỉ nhận hàng</h2>
 					<div class="location__input-group">
-						<input name="province" onchange="changeProvince(event)" class="location__select" type="text" list="province" placeholder="Tỉnh/Thành phố" required>
-						<datalist id="province">
-							<option value="Hồ Chí Minh"></option>
-							<option value="Vũng Tàu"></option>
-						</datalist>
+						<select name="province" id="province" onchange="changeProvince(event)" class="location__select" required>
+							<option value="" disabled selected>Tỉnh/Thành phố</option>
+						</select>
 
-						<input name="district" onchange="changeDistrict(event)" class="location__select" type="text" list="district" placeholder="Quận/huyện" required>
-						<datalist id="district"> </datalist>
-						<input name="ward" class="location__select" type="text" list="ward" placeholder="Phường/xã" required>
-						<datalist id="ward"> </datalist>
+						<select name="district" id="district" onchange="changeDistrict(event)" class="location__select" required disabled>
+							<option value="" disabled selected>Quận/huyện</option>
+						</select>
+
+						<select name="ward" id="ward" class="location__select" required disabled>
+							<option value="" disabled selected>Phường/xã</option>
+						</select>
 						<input name="address" type="text" placeholder="Địa chỉ" required>
 					</div>
 				</div>

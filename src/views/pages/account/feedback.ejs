@@ -24,7 +24,7 @@
 
 	<div class="feedback-wrapper">
 		<h3>ĐÁNH GIÁ SẢN PHẨM</h3>
-		<form action="/account/feedback" method="POST" class="rating-form">
+		<form action="/account/feedback" method="POST" class="rating-form" enctype="multipart/form-data">
 			<input type="hidden" name="order_id" value="<%= orderDetails[0].order_id %>">
 			<% for(let i = 0; i < orderDetails.length; i++) { %>
 			<div class="feedback-form-item">
@@ -65,6 +65,11 @@
 					<div class="ratingText"></div>
 				</div>
 				<textarea name="opinion" cols="30" rows="8" readonly placeholder="Đánh giá của bạn..."><%= orderDetails[i].feedback.feedback_content ?? 'Bạn không để lại lời nhận xét nào' %></textarea>
+				<% if (orderDetails[i].feedback.feedback_img) { %>
+				<div class="image-preview-container">
+					<img src="/imgs/feedbacks/<%= orderDetails[i].feedback.feedback_img %>" alt="Ảnh đánh giá">
+				</div>
+				<% } %>
 			</div>
 			<% } else { %>
 			<div class="quality">
@@ -86,6 +91,7 @@
 						add_a_photo
 					</span> Thêm hình ảnh
 				</label>
+				<div id="imagePreview<%=i%>" class="image-preview-container"></div>
 			</div>
 
 			<textarea name="opinion" cols="30" rows="8" placeholder="Đánh giá của bạn..."></textarea>

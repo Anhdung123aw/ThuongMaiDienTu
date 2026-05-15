@@ -60,6 +60,21 @@ togglePasswordButton.addEventListener("click", function () {
 const form = document.getElementById('form');
 const phoneNumber = document.getElementById('phoneNumber');
 const password = document.getElementById('password');
+const captcha = document.getElementById('captcha');
+const captchaImg = document.getElementById("captcha-img");
+const refreshCaptcha = document.getElementById("refresh-captcha");
+
+const reloadCaptcha = () => {
+    captchaImg.src = `/auth/captcha?t=${Date.now()}`;
+};
+
+if (captchaImg) {
+    captchaImg.addEventListener("click", reloadCaptcha);
+}
+
+if (refreshCaptcha) {
+    refreshCaptcha.addEventListener("click", reloadCaptcha);
+}
 
 
 form.addEventListener('submit', e => {
@@ -92,6 +107,12 @@ const isValidPhoneNumber = phoneNumber => {
     return re.test(String(phoneNumber).trim());
 }
 
+const isValidPassword = password => {
+    const hasLetter = /[a-zA-Z]/.test(password);
+    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>_]/.test(password);
+    return password.length >= 8 && hasLetter && hasSpecialChar;
+}
+
 const validateInput = () => {
 
     const PhoneNumberValue = phoneNumber.value.trim();
@@ -112,17 +133,26 @@ const validateInput = () => {
     if (PasswordValue === '') {
         setError(password, 'Vui lòng nhập mật khẩu!');
         isAllValid = false;
-    } else if (PasswordValue.length < 8) {
-        setError(password, 'Mật khẩu phải ít nhất 8 ký tự!')
+    } else if (!isValidPassword(PasswordValue)) {
+        setError(password, 'Mật khẩu phải ít nhất 8 ký tự, bao gồm ít nhất 1 chữ cái và 1 ký tự đặc biệt!');
         isAllValid = false;
     } else {
         setSuccess(password);
     }
 
+    const captchaValue = captcha.value.trim();
+    if (captchaValue === '') {
+        setError(captcha, 'Vui lòng nhập mã xác nhận!');
+        isAllValid = false;
+    } else {
+        setSuccess(captcha);
+    }
+
     if (isAllValid) {
         const login = {
             phoneNumber: phoneNumber.value.trim(),
-            password: password.value.trim()
+            password: password.value.trim(),
+            captcha: captcha.value.trim()
         }
         fetch("/auth/login", {
             method: 'POST',
@@ -133,9 +163,14 @@ const validateInput = () => {
         }).then(res => res.json()).then(back => {
             if (back.status == "error") {
                 setError(phoneNumber, back.error);
+                if (back.error.includes("Mã xác nhận")) {
+                    setError(captcha, back.error);
+                    reloadCaptcha();
+                }
             }
             else if (back.status == "error2") {
                 setError(password, back.error);
+                reloadCaptcha();
             }
             else {
                 window.location.href = '/'

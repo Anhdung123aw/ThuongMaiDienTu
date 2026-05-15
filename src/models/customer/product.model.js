@@ -53,7 +53,7 @@ product.getProductImgs = async (product_variant_id) => {
 product.getProductFeedbacks = async (product_variant_id) => {
     let product_id = await general.getProductId(product_variant_id)
 
-    let getProductFeedbacks = `SELECT * FROM view_product_feedbacks WHERE product_id = ${product_id}`
+    let getProductFeedbacks = `SELECT * FROM view_product_feedbacks WHERE product_id = ${product_id} ORDER BY feedback_date DESC, feedback_id DESC`
 
     return new Promise((resolve, reject) => {
         db.query(getProductFeedbacks, (err, productFeedbacks) => {

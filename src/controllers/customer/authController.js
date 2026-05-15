@@ -65,7 +65,12 @@ authController.submitRegister = async (req, res) => {
 
 
   auth.registerPost(req, function (error, dupPhoneNumber, success) {
-    if (error) res.render("./pages/site/404-error");
+    if (error) {
+      return res.json({
+        status: "error",
+        error: "Lỗi hệ thống khi đăng ký. Vui lòng thử lại sau.",
+      });
+    }
     if (dupPhoneNumber)
       return res.json({
         status: "error",
@@ -76,9 +81,37 @@ authController.submitRegister = async (req, res) => {
       // Xóa captcha sau khi dùng xong
       delete req.session.captcha;
 
-      return res.json({
-        status: "success",
-        success: "Register successfully",
+      // Đăng nhập luôn cho user sau khi đăng ký thành công
+      auth.findNumberPhone(req, function (err, notFound, success, id) {
+        if (success) {
+          const token = jwt.sign(
+            {
+              id,
+            },
+            process.env.JWT_SECRET,
+            {
+              expiresIn: process.env.JWT_EXPIRES,
+            }
+          );
+
+          const cookieOptions = {
+            expires: new Date(
+              Date.now() + process.env.JWT_COOKIE_EXPIRES * 24 * 60 * 60 * 1000
+            ),
+            httpOnly: true,
+          };
+          res.cookie("userSave", token, cookieOptions);
+          return res.json({
+            status: "success",
+            success: "Đăng ký và đăng nhập thành công",
+          });
+        } else {
+          // Nếu không tìm thấy user vừa tạo (hy hữu), vẫn báo thành công nhưng không login
+          return res.json({
+            status: "success",
+            success: "Đăng ký thành công, vui lòng đăng nhập",
+          });
+        }
       });
     }
   });
@@ -91,6 +124,16 @@ authController.login = async (req, res) => {
 
 // [POST] /login
 authController.submitLogin = async (req, res) => {
+  const { captcha } = req.body;
+
+  // Kiểm tra Captcha
+  if (!captcha || captcha.toLowerCase() !== req.session.captcha) {
+    return res.json({
+      status: "error",
+      error: "Mã xác nhận không chính xác",
+    });
+  }
+
   await auth.loginPost(
     req,
     function (err, nonePhoneNumber, NotMatchPassword, success, id) {
@@ -127,6 +170,10 @@ authController.submitLogin = async (req, res) => {
           httpOnly: true,
         };
         res.cookie("userSave", token, cookieOptions);
+        
+        // Xóa captcha sau khi dùng xong
+        delete req.session.captcha;
+
         return res.json({
           status: "success",
           success: "Bạn đã đăng nhập thành công",

@@ -104,11 +104,11 @@ account.getDetailPurchaseHistorys = async (order_id, customer_id) => {
     })
 }
 
-account.insertFeedback = async (product_variant_id, customer_id, order_id, feedback_rate, feedback_content, callback) => {
+account.insertFeedback = async (product_variant_id, customer_id, order_id, feedback_rate, feedback_content, feedback_img, callback) => {
     if (feedback_content == '') feedback_content = 'Bạn không để lại lời nhận xét nào'
-    let insertFeedback = `INSERT INTO feedbacks (product_variant_id, customer_id, order_id, feedback_rate, feedback_content) VALUES (${product_variant_id}, ${customer_id}, ${order_id}, ${feedback_rate}, ?)`
+    let insertFeedback = `INSERT INTO feedbacks (product_variant_id, customer_id, order_id, feedback_rate, feedback_content, feedback_img) VALUES (${product_variant_id}, ${customer_id}, ${order_id}, ${feedback_rate}, ?, ?)`
 
-    db.query(insertFeedback, [feedback_content], (err, result) => {
+    db.query(insertFeedback, [feedback_content, feedback_img], (err, result) => {
         if (err) {
             console.log(err)
             callback(1, 0)

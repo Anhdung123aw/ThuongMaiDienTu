@@ -81,7 +81,7 @@
 
                 <td><%= new Date(item.discount_end_date).toLocaleDateString('vi-VN') %></td>
 
-                <td><%= item.discount_amount %>%</td>
+                <td><%= Math.floor(item.discount_amount) %>%</td>
 
                 <td>
                   <ul class="action__dropdown dropdown">

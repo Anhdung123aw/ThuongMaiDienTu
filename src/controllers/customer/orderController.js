@@ -40,7 +40,19 @@ orderController.addCart = async (req, res) => {
 
 // [GET] /order/cart
 orderController.cart = async (req, res) => {
-	customer_id = req.user.customer_id
+	let customer_id = req.user.customer_id
+	if (!customer_id) {
+		const db = require('../../config/db/connect')
+		const results = await new Promise((resolve) => {
+			db.query('SELECT customer_id FROM customers WHERE user_id = ?', [req.user.user_id], (err, results) => {
+				resolve(results)
+			})
+		})
+		if (results && results.length > 0) {
+			customer_id = results[0].customer_id
+		}
+	}
+
 	let header_user = await index.header_user(req)
 	let header = await index.header(req)
 	let detailCart = await order.getDetailCart(customer_id)
@@ -112,6 +124,20 @@ orderController.informationPost = async (req, res) => {
 	let orderInformation = req.body
 
 	let customer_id = req.user.customer_id
+
+	// Fallback for new users where customer_id might not be in req.user yet
+	if (!customer_id) {
+		const db = require('../../config/db/connect')
+		const results = await new Promise((resolve) => {
+			db.query('SELECT customer_id FROM customers WHERE user_id = ?', [req.user.user_id], (err, results) => {
+				resolve(results)
+			})
+		})
+		if (results && results.length > 0) {
+			customer_id = results[0].customer_id
+		}
+	}
+
 	let orderInfo = orderInformation.orderInfo
 	let orderDetails = orderInformation.orderDetails
 
@@ -142,6 +168,18 @@ orderController.payment = async (req, res) => {
 	let order_id = req.query.order_id
 
 	let customer_id = req.user.customer_id
+	if (!customer_id) {
+		const db = require('../../config/db/connect')
+		const results = await new Promise((resolve) => {
+			db.query('SELECT customer_id FROM customers WHERE user_id = ?', [req.user.user_id], (err, results) => {
+				resolve(results)
+			})
+		})
+		if (results && results.length > 0) {
+			customer_id = results[0].customer_id
+		}
+	}
+
 	let header_user = await index.header_user(req)
 	let header = await index.header(req)
 	let formatFunction = await general.formatFunction()

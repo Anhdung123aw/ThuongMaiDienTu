@@ -124,6 +124,12 @@ const isValidPhoneNumber = (phoneNumber) => {
 const isValidName = (name) => {
   return !/\d/.test(name); // nếu có số → false
 };
+
+const isValidPassword = (password) => {
+  const hasLetter = /[a-zA-Z]/.test(password);
+  const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>_]/.test(password);
+  return password.length >= 8 && hasLetter && hasSpecialChar;
+};
 //
 
 const validateInput = async () => {
@@ -159,12 +165,11 @@ const validateInput = async () => {
   if (passwordValue === "") {
     setError(password, "Vui lòng nhập mật khẩu!");
     isAllValid = false;
+  } else if (!isValidPassword(passwordValue)) {
+    setError(password, "Mật khẩu phải ít nhất 8 ký tự, bao gồm ít nhất 1 chữ cái và 1 ký tự đặc biệt!");
+    isAllValid = false;
   } else if (passwordRepeatValue === "") {
     setError(passwordRepeat, "Vui lòng nhập lại mật khẩu!");
-    isAllValid = false;
-  } else if (passwordValue.length < 8 || passwordRepeatValue.length < 8) {
-    setError(password, "Mật khẩu phải ít nhất 8 ký tự!");
-    setError(passwordRepeat, "Mật khẩu phải ít nhất 8 ký tự!");
     isAllValid = false;
   } else if (passwordRepeatValue !== passwordValue) {
     setError(password, "Mật khẩu không khớp!");
@@ -209,21 +214,7 @@ const validateInput = async () => {
           setError(captcha, back.error);
           reloadCaptcha();
         } else {
-
-          const login = {
-            phoneNumber: phoneNumber.value.trim(),
-            password: password.value.trim(),
-          };
-
-          await fetch("/auth/login", {
-            method: "POST",
-            body: JSON.stringify(login),
-            headers: {
-              "Content-Type": "application/json",
-            },
-          });
-          location.reload();
-          // window.location.href ='/'
+          window.location.href = "/";
         }
       });
   }

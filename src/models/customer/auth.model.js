@@ -7,9 +7,12 @@ auth.registerPost = async (req, callback) => {
   const { user_login_name, user_phone, user_password } = req.body;
 
   db.query("SELECT user_phone FROM users WHERE user_phone = ?", [user_phone], async (err, result) => {
-    if (err) callback(1, 0, 0);
-    if (result[0]) {
-      callback(0, 1, 0);
+    if (err) {
+      console.error("Error checking for existing phone number:", err);
+      return callback(1, 0, 0);
+    }
+    if (result && result.length > 0) {
+      return callback(0, 1, 0);
     } else {
       let hashedPassword = await bcrypt.hash(user_password, 8);
 
@@ -21,13 +24,17 @@ auth.registerPost = async (req, callback) => {
             user_phone: user_phone,
             user_name: user_login_name,
             user_password: hashedPassword,
-            user_register_date: new Date(),
+            user_register_date: new Date().toISOString().slice(0, 10),
             user_active: 1,
           },
         ],
         async (error, results) => {
-          if (err) callback(1, 0, 0);
-          callback(0, 0, 1);
+          if (error) {
+            console.error("Error during registration insertion:", error);
+            return callback(1, 0, 0);
+          }
+          console.log("User registered successfully in database:", user_phone);
+          return callback(0, 0, 1);
         }
       );
     }

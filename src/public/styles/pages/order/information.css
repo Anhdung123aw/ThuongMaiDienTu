@@ -137,16 +137,21 @@ input::-webkit-calendar-picker-indicator {
 }
 
 .location__select {
-    color: var(--primary-color-2);
+    color: var(--black);
+    width: 32%;
+    height: 48px;
+    box-sizing: border-box;
+    padding: 0px 12px;
+    border: 1px solid var(--outline-gray);
+    border-radius: 8px;
+    font-size: 1rem;
 }
 
 .location__input-group datalist option {
     width: 100%;
 }
 
-.location__select::placeholder {
-    color: var(--primary-color-2) !important;
-}
+
 
 .note__text-area {
     width: 100%;

@@ -81,6 +81,12 @@ const resetSuccess = (element) => {
 	inputControlReset.classList.remove("error");
 };
 
+const isValidPassword = (password) => {
+	const hasLetter = /[a-zA-Z]/.test(password);
+	const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>_]/.test(password);
+	return password.length >= 8 && hasLetter && hasSpecialChar;
+};
+
 const resetValidateInput = () => {
 	const PasswordValue = Password.value.trim();
 	const confirmPasswordValue = confirmPasswordInput.value.trim();
@@ -90,8 +96,8 @@ const resetValidateInput = () => {
 	if (PasswordValue === "") {
 		resetError(Password, "Vui lòng nhập mật khẩu!");
 		isAllValid = false;
-	} else if (PasswordValue.length < 8) {
-		resetError(Password, "Mật khẩu phải ít nhất 8 ký tự!");
+	} else if (!isValidPassword(PasswordValue)) {
+		resetError(Password, "Mật khẩu phải ít nhất 8 ký tự, bao gồm ít nhất 1 chữ cái và 1 ký tự đặc biệt!");
 		isAllValid = false;
 	} else {
 		resetSuccess(Password, "Hợp lệ");

@@ -67,11 +67,11 @@ order.updateCart = async function (customer_id, productsUpdateCart, callback) {
 order.insertOrder = function (customer_id, orderInfo, orderDetails, callback) {
     let insertOrder = ''
     if (orderInfo.paying_method_id != 1) {
-        insertOrder = `INSERT INTO orders (customer_id, order_name, order_phone, order_delivery_address, order_note, paying_method_id)
-                        VALUES (${customer_id}, ? , '${orderInfo.order_phone}', ? , ? , ${orderInfo.paying_method_id})`
+        insertOrder = `INSERT INTO orders (customer_id, order_name, order_phone, order_delivery_address, order_note, paying_method_id, order_delivery_date, order_paying_date, order_is_paid)
+                        VALUES (${customer_id}, ? , '${orderInfo.order_phone}', ? , ? , ${orderInfo.paying_method_id}, CURRENT_DATE + INTERVAL 3 DAY, CURRENT_DATE, 0)`
     } else {
-        insertOrder = `INSERT INTO orders (customer_id, order_name, order_phone, order_delivery_address, order_note, paying_method_id, order_is_paid, order_paying_date, order_status)
-                        VALUES (${customer_id}, ? , '${orderInfo.order_phone}', ? , ? , 1, 1, ${new Date().getDate()} ,'Đang giao hàng')`
+        insertOrder = `INSERT INTO orders (customer_id, order_name, order_phone, order_delivery_address, order_note, paying_method_id, order_delivery_date, order_is_paid, order_paying_date, order_status)
+                        VALUES (${customer_id}, ? , '${orderInfo.order_phone}', ? , ? , 1, CURRENT_DATE + INTERVAL 3 DAY, 1, CURRENT_DATE ,'Đang giao hàng')`
     }
 
     db.query(insertOrder, [orderInfo.order_name, orderInfo.order_delivery_address, orderInfo.order_note], (err, result) => {
