@@ -160,3 +160,18 @@ window.onclick = function (e) {
         }
     });
 };
+
+// Xử lý lọc giảm giá (Discount checkbox)
+const discountCheckbox = document.getElementById('form-check-input__discount');
+if (discountCheckbox) {
+    discountCheckbox.addEventListener('change', () => {
+        const url = new URL(window.location.href);
+        if (discountCheckbox.checked) {
+            url.searchParams.set('discount', 'true');
+        } else {
+            url.searchParams.delete('discount');
+        }
+        url.searchParams.delete('page'); // Reset về trang 1 khi lọc
+        window.location.href = url.toString();
+    });
+}

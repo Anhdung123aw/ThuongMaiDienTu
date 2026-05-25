@@ -12,6 +12,7 @@ search.findProductsBySearchKey = async (req, limit = 24) => {
   const minPrice = req.query.minPrice;
   const maxPrice = req.query.maxPrice;
   const sort = req.query.sort;
+  const discount = req.query.discount === "true" || req.query.discount === true;
 
   let where = `
     WHERE p.product_is_display = 1
@@ -99,12 +100,20 @@ search.findProductsBySearchKey = async (req, limit = 24) => {
   if (sort === "best_seller") orderBy = `ORDER BY p.product_view_count DESC`;
 
   // =========================
+  // DISCOUNT FILTER
+  // =========================
+  if (discount) {
+    where += ` AND vd.discount_amount IS NOT NULL`;
+  }
+
+  // =========================
   // COUNT QUERY
   // =========================
   const countSQL = `
     SELECT COUNT(DISTINCT p.product_id) as total
     FROM products p
     JOIN product_variants pv ON pv.product_id = p.product_id
+    LEFT JOIN view_discounts vd ON pv.discount_id = vd.discount_id
     ${where}
   `;
 
@@ -135,10 +144,17 @@ search.findProductsBySearchKey = async (req, limit = 24) => {
       pv.product_variant_name,
       pv.product_variant_price,
       pv.product_variant_available,
-      pv.unit
+      pv.unit,
+      vd.discount_amount,
+      vd.discount_description,
+      c.category_name
     FROM products p
     JOIN product_variants pv 
       ON pv.product_id = p.product_id
+    LEFT JOIN view_discounts vd
+      ON pv.discount_id = vd.discount_id
+    LEFT JOIN categories c
+      ON p.category_id = c.category_id
     ${where}
     ${orderBy}
     LIMIT ?, ?
@@ -155,6 +171,7 @@ search.findProductsBySearchKey = async (req, limit = 24) => {
     minPrice,
     maxPrice,
     sort,
+    discount,
     totalRow,
     totalPage,
     page,
@@ -167,6 +184,7 @@ search.findProductsByCateId = async (req, limit = 24) => {
   const minPrice = req.query.minPrice;
   const maxPrice = req.query.maxPrice;
   const sort = req.query.sort;
+  const discount = req.query.discount === "true" || req.query.discount === true;
 
   let where = `
     WHERE p.product_is_display = 1
@@ -254,12 +272,20 @@ search.findProductsByCateId = async (req, limit = 24) => {
   if (sort === "best_seller") orderBy = `ORDER BY p.product_view_count DESC`;
 
   // =========================
+  // DISCOUNT FILTER
+  // =========================
+  if (discount) {
+    where += ` AND vd.discount_amount IS NOT NULL`;
+  }
+
+  // =========================
   // COUNT QUERY
   // =========================
   const countSQL = `
     SELECT COUNT(DISTINCT p.product_id) as total
     FROM products p
     JOIN product_variants pv ON pv.product_id = p.product_id
+    LEFT JOIN view_discounts vd ON pv.discount_id = vd.discount_id
     ${where}
   `;
 
@@ -290,10 +316,17 @@ search.findProductsByCateId = async (req, limit = 24) => {
       pv.product_variant_name,
       pv.product_variant_price,
       pv.product_variant_available,
-      pv.unit
+      pv.unit,
+      vd.discount_amount,
+      vd.discount_description,
+      c.category_name
     FROM products p
     JOIN product_variants pv 
       ON pv.product_id = p.product_id
+    LEFT JOIN view_discounts vd
+      ON pv.discount_id = vd.discount_id
+    LEFT JOIN categories c
+      ON p.category_id = c.category_id
     ${where}
     ${orderBy}
     LIMIT ?, ?
@@ -310,6 +343,7 @@ search.findProductsByCateId = async (req, limit = 24) => {
     minPrice,
     maxPrice,
     sort,
+    discount,
     totalRow,
     totalPage,
     page,

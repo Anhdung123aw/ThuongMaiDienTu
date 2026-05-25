@@ -1,0 +1,40 @@
+<div class="chat-bubble-container">
+  <!-- Option list (Facebook, Zalo) -->
+  <div class="chat-bubble-options" id="chatBubbleOptions">
+    <!-- Facebook option -->
+    <a href="https://web.facebook.com/le.van.dung.605126" target="_blank" class="chat-bubble-option facebook" aria-label="Liên hệ Facebook">
+      <span class="option-label">Facebook</span>
+      <div class="option-icon">
+        <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="20" cy="20" r="20" fill="#1877F2"/>
+          <path d="M24 20H21V30H17V20H15V16.7H17V14.5C17 12.3 18.2 11 20.6 11C21.8 11 22.8 11.1 22.8 11.1V13.9H21.4C20.1 13.9 19.7 14.7 19.7 15.5V16.7H22.8L24 20Z" fill="white"/>
+        </svg>
+      </div>
+    </a>
+    
+    <!-- Zalo option -->
+    <a href="https://zalo.me/0346367492" target="_blank" class="chat-bubble-option zalo" aria-label="Liên hệ Zalo">
+      <span class="option-label">Zalo</span>
+      <div class="option-icon">
+        <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="20" cy="20" r="20" fill="#0068ff"/>
+          <text x="50%" y="56%" dominant-baseline="middle" text-anchor="middle" fill="white" font-size="11" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-weight="900" letter-spacing="-0.5">Zalo</text>
+        </svg>
+      </div>
+    </a>
+  </div>
+
+  <!-- Trigger main button -->
+  <button class="chat-bubble-trigger" id="chatBubbleTrigger" aria-label="Mở bong bóng chat">
+    <div class="trigger-ring"></div>
+    <div class="trigger-ring-2"></div>
+    <div class="trigger-icons">
+      <!-- Chat icon (visible by default) -->
+      <span class="material-symbols-outlined chat-icon-message">chat</span>
+      <!-- Close icon (hidden by default) -->
+      <span class="material-symbols-outlined chat-icon-close">close</span>
+    </div>
+    <!-- Small notification badge to attract attention -->
+    <span class="chat-bubble-badge"></span>
+  </button>
+</div>

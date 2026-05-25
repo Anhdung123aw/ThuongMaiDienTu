@@ -1,0 +1,279 @@
+/* Chat Bubble Container */
+.chat-bubble-container {
+    position: fixed;
+    bottom: 125px; /* Placed cleanly above the scroll-up button */
+    right: 30px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 16px;
+    user-select: none;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* Chat Bubble Options Wrapper */
+.chat-bubble-options {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 12px;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(20px) scale(0.8);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.chat-bubble-options.active {
+    pointer-events: auto;
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+
+/* Chat Bubble Option Items */
+.chat-bubble-option {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    gap: 10px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.chat-bubble-option:hover {
+    transform: scale(1.08);
+}
+
+.chat-bubble-option .option-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15), 0 0 1px rgba(0, 0, 0, 0.1) inset;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+    transition: box-shadow 0.3s ease;
+}
+
+.chat-bubble-option.facebook .option-icon {
+    box-shadow: 0 4px 12px rgba(24, 119, 242, 0.3);
+}
+
+.chat-bubble-option.zalo .option-icon {
+    box-shadow: 0 4px 12px rgba(0, 104, 255, 0.3);
+}
+
+.chat-bubble-option .option-icon svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+/* Option Labels */
+.chat-bubble-option .option-label {
+    background-color: rgba(255, 255, 255, 0.95);
+    color: #333333;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 20px;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    white-space: nowrap;
+    opacity: 0;
+    transform: translateX(10px);
+    transition: all 0.3s ease;
+    backdrop-filter: blur(4px);
+}
+
+/* Make labels appear elegantly when options open */
+.chat-bubble-options.active .chat-bubble-option .option-label {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* Specific label delay for staggered appearance */
+.chat-bubble-options.active .chat-bubble-option:nth-child(1) .option-label {
+    transition-delay: 0.1s;
+}
+.chat-bubble-options.active .chat-bubble-option:nth-child(2) .option-label {
+    transition-delay: 0.15s;
+}
+
+/* Trigger Button */
+.chat-bubble-trigger {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #2a7ee4 0%, #1877F2 100%);
+    border: none;
+    outline: none;
+    cursor: pointer;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 16px rgba(24, 119, 242, 0.4);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.chat-bubble-trigger:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px rgba(24, 119, 242, 0.5);
+}
+
+.chat-bubble-trigger:active {
+    transform: scale(0.95);
+}
+
+/* Icon Animations in Trigger */
+.chat-bubble-trigger .trigger-icons {
+    position: relative;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.chat-bubble-trigger .material-symbols-outlined {
+    position: absolute;
+    font-size: 28px;
+    color: #ffffff;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.chat-bubble-trigger .chat-icon-message {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+}
+
+.chat-bubble-trigger .chat-icon-close {
+    opacity: 0;
+    transform: scale(0) rotate(90deg);
+}
+
+/* State when active (open) */
+.chat-bubble-trigger.active {
+    background: linear-gradient(135deg, #ff4e50 0%, #f9d423 100%);
+    box-shadow: 0 4px 16px rgba(255, 78, 80, 0.4);
+}
+
+.chat-bubble-trigger.active .chat-icon-message {
+    opacity: 0;
+    transform: scale(0) rotate(-90deg);
+}
+
+.chat-bubble-trigger.active .chat-icon-close {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+}
+
+/* Pulsing rings decoration */
+.chat-bubble-trigger .trigger-ring,
+.chat-bubble-trigger .trigger-ring-2 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-color: rgba(24, 119, 242, 0.3);
+    z-index: -1;
+    pointer-events: none;
+}
+
+.chat-bubble-trigger .trigger-ring {
+    animation: bubble-pulse 2.5s infinite;
+}
+
+.chat-bubble-trigger .trigger-ring-2 {
+    animation: bubble-pulse-2 2.5s infinite;
+    animation-delay: 0.8s;
+}
+
+.chat-bubble-trigger.active .trigger-ring,
+.chat-bubble-trigger.active .trigger-ring-2 {
+    background-color: rgba(255, 78, 80, 0.3);
+}
+
+/* Notification badge (blinking dot) */
+.chat-bubble-badge {
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    width: 12px;
+    height: 12px;
+    background-color: #ff3b30;
+    border: 2px solid #ffffff;
+    border-radius: 50%;
+    animation: badge-blink 1.5s infinite;
+}
+
+.chat-bubble-trigger.active .chat-bubble-badge {
+    display: none; /* Hide badge when open */
+}
+
+/* Pulse Keyframes */
+@keyframes bubble-pulse {
+    0% {
+        transform: scale(1);
+        opacity: 0.8;
+    }
+    100% {
+        transform: scale(1.6);
+        opacity: 0;
+    }
+}
+
+@keyframes bubble-pulse-2 {
+    0% {
+        transform: scale(1);
+        opacity: 0.8;
+    }
+    100% {
+        transform: scale(1.5);
+        opacity: 0;
+    }
+}
+
+@keyframes badge-blink {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.2);
+        opacity: 0.7;
+    }
+}
+
+/* Mobile responsive adjustments */
+@media only screen and (max-width: 48rem) {
+    .chat-bubble-container {
+        right: 15px;
+        bottom: 145px; /* Above mobile app bar and scroll-up */
+        gap: 12px;
+    }
+    
+    .chat-bubble-trigger {
+        width: 48px;
+        height: 48px;
+    }
+    
+    .chat-bubble-trigger .material-symbols-outlined {
+        font-size: 24px;
+    }
+    
+    .chat-bubble-option .option-icon {
+        width: 42px;
+        height: 42px;
+    }
+    
+    .chat-bubble-option .option-label {
+        font-size: 12px;
+        padding: 4px 10px;
+    }
+}
