@@ -12,9 +12,18 @@ discountAdminController.getDiscounts = async (req, res) => {
   let page = parseInt(req.query.page) || 1;
   let limit = 10;
   let offset = (page - 1) * limit;
+  let searchKey = req.query.searchKey || "";
 
-  let countSql = `SELECT COUNT(*) AS total FROM discounts`;
-  let countResult = await query(countSql);
+  let whereClause = "";
+  let queryParams = [];
+
+  if (searchKey) {
+    whereClause = "WHERE discount_name LIKE ?";
+    queryParams.push(`%${searchKey}%`);
+  }
+
+  let countSql = `SELECT COUNT(*) AS total FROM discounts ${whereClause}`;
+  let countResult = await query(countSql, queryParams);
 
   let totalRow = countResult[0].total;
   let totalPage = Math.ceil(totalRow / limit);
@@ -22,11 +31,12 @@ discountAdminController.getDiscounts = async (req, res) => {
   let sql = `
     SELECT *
     FROM discounts
+    ${whereClause}
     ORDER BY discount_id DESC
     LIMIT ${limit} OFFSET ${offset}
   `;
 
-  let discounts = await query(sql);
+  let discounts = await query(sql, queryParams);
 
   res.render("admin/pages/discounts_admin", {
     title,
@@ -37,6 +47,7 @@ discountAdminController.getDiscounts = async (req, res) => {
       totalPage,
       page,
       limit,
+      searchKey,
     },
   });
 };

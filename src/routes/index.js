@@ -7,6 +7,7 @@ const authRouter = require('./authRouter')
 const orderRouter = require('./orderRouter')
 const searchRouter = require('./searchRouter')
 const generalRouter = require('./generalRouter')
+const chatbotRouter = require('./chatbotRouter')
 
 function route(app) {
 
@@ -17,6 +18,7 @@ function route(app) {
   app.use('/notification', notificationRouter)
   app.use('/account', accountRouter)
   app.use('/general', generalRouter)
+  app.use('/chatbot', chatbotRouter)
   app.use('/', siteRouter)
   app.use((req, res) => {
     res.status(404).redirect('/error');

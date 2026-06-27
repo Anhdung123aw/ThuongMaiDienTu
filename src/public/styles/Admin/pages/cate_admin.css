@@ -479,11 +479,13 @@ a.admin-a {
 }
 
 .action__dropdown>li>ul.dropdown__list>li {
-	padding: 0.8rem;
+	padding: 0;
 }
 
 .action__dropdown>li>ul.dropdown__list>li a {
 	color: var(--dark9);
+	display: block;
+	padding: 0.8rem;
 }
 
 .action__dropdown>li>ul.dropdown__list>li:hover a {

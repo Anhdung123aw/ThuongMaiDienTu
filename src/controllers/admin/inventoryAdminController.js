@@ -11,10 +11,24 @@ inventoryAdminController.getInventory = async (req, res) => {
   let page = parseInt(req.query.page) || 1;
   let limit = 10;
   let offset = (page - 1) * limit;
+  let searchKey = req.query.searchKey || "";
+
+  let whereClause = "";
+  let queryParams = [];
+
+  if (searchKey) {
+    whereClause = "WHERE p.product_name LIKE ? OR pv.product_variant_id LIKE ?";
+    queryParams.push(`%${searchKey}%`, `%${searchKey}%`);
+  }
 
   // COUNT
-  let countSql = `SELECT COUNT(*) AS total FROM product_variants`;
-  let countResult = await query(countSql);
+  let countSql = `
+    SELECT COUNT(*) AS total 
+    FROM product_variants pv
+    JOIN products p ON pv.product_id = p.product_id
+    ${whereClause}
+  `;
+  let countResult = await query(countSql, queryParams);
   let totalRow = countResult[0].total;
   let totalPage = Math.ceil(totalRow / limit);
 
@@ -40,11 +54,13 @@ inventoryAdminController.getInventory = async (req, res) => {
   LEFT JOIN discounts d 
     ON pv.discount_id = d.discount_id
 
+  ${whereClause}
+
   ORDER BY pv.product_variant_id ASC
   LIMIT ${limit} OFFSET ${offset}
 `;
 
-  let inventory = await query(sql);
+  let inventory = await query(sql, queryParams);
 
   res.render("admin/pages/inventory_admin", {
     title,
@@ -55,6 +71,7 @@ inventoryAdminController.getInventory = async (req, res) => {
       totalPage,
       page,
       limit,
+      searchKey,
     },
   });
 };

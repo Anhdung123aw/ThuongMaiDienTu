@@ -33,7 +33,7 @@
 
 		<% } %>
 		<% if (pagination.page != pagination.totalPage) { %>
-		<% if (pagination.searchKey) { %><a href="?page=<%= page < pagination.totalPage ? page + 1 : pagination.totalPage %>&searchKey=<%= pagination.searchKey %>"><span class="material-symbols-rounded">
+		<% if (pagination.searchKey) { %><a href="?page=<%= pagination.page < pagination.totalPage ? pagination.page + 1 : pagination.totalPage %>&searchKey=<%= pagination.searchKey %>"><span class="material-symbols-rounded">
 				chevron_right
 			</span></a>
 		<% } else { %><a href="?page=<%= pagination.page < pagination.totalPage ? pagination.page + 1 : pagination.totalPage %>"><span class="material-symbols-rounded">
